@@ -146,16 +146,57 @@ video{
     animation:flotar 3s ease-in-out infinite;
 }
 
-/* PLATO */
+/* TÍTULO */
+
+.titulo{
+    position:absolute;
+    top:20px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    font-size:50px;
+    color:#5c4630;
+
+    font-weight:bold;
+
+    text-align:center;
+
+    text-shadow:
+    3px 3px 8px rgba(0,0,0,0.2);
+
+    z-index:2;
+
+    animation:entradaTitulo 1s ease;
+}
+
+@keyframes entradaTitulo{
+
+    from{
+        opacity:0;
+        transform:
+        translateX(-50%)
+        translateY(-30px);
+    }
+
+    to{
+        opacity:1;
+        transform:
+        translateX(-50%)
+        translateY(0);
+    }
+
+}
+
+/* PLATO MÁS GRANDE */
 
 .plato{
-    width:350px;
+    width:550px;
 
     animation:
     entradaPlato 1.2s ease,
     girar 6s linear infinite;
 }
-
 @keyframes entradaPlato{
     from{
         opacity:0;
@@ -282,8 +323,8 @@ button:hover{
     }
 
 .plato{
-    width:500px;
-
+    width:450px;
+}
     animation:
     entradaPlato 1.2s ease,
     girar 6s linear infinite;
