@@ -300,6 +300,8 @@ button:hover{
 </head>
 
 <body>
+    <!-- AUDIO DE BIENVENIDA -->
+<audio id="audioBienvenida" src="Audio bienvenida.mp3"></audio>
 
 <!-- AVATAR -->
 <div class="avatarBox">
@@ -364,17 +366,31 @@ button:hover{
     
 <script>
 
+    /* =========================
+   AUDIO AUTOMÁTICO
+========================= */
+
+window.onload = function(){
+
+    const audio =
+    document.getElementById("audioBienvenida");
+
+    audio.play().catch(()=>{});
+
+};
+
 /* =========================
    CONFIGURAR SUPABASE
 ========================= */
 
-const SUPABASE_URL = "https://TU-PROYECTO.supabase.co";
-
-const SUPABASE_KEY = "TU-API-KEY";
+const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
+const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV"
 
 const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
+    _supabaseUrl,
+    _supabaseKey
+);
+);
 );
 
 /* =========================
