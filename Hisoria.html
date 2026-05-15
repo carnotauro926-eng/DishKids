@@ -18,23 +18,56 @@ overflow:hidden;
 }
 
 /* AVATAR */
+
 .avatar-esquina{
-position:fixed;
-top:15px;
-right:15px;
-font-size:50px;
-background:#fff;
-border-radius:50%;
-padding:10px;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
+position:absolute;
+
+top:20px;
+left:20px;
+
+background:white;
+
+padding:15px 20px;
+
+border-radius:20px;
+
+display:flex;
+align-items:center;
+gap:12px;
+
+box-shadow:
+0 8px 20px rgba(0,0,0,0.15);
+
 z-index:9999;
 
-/* ANIMACIÓN */
-opacity:0;
-transform:scale(0.3) rotate(-180deg);
-animation:entradaAvatar 0.8s ease-out forwards;
+animation:
+avatarEntrada 1s ease;
 }
 
+@keyframes avatarEntrada{
+
+from{
+opacity:0;
+transform:translateX(-40px);
+}
+
+to{
+opacity:1;
+transform:translateX(0);
+}
+
+}
+
+.avatarEmoji{
+font-size:50px;
+}
+
+.avatarTexto{
+font-size:20px;
+font-weight:bold;
+color:#5c4630;
+}
+   
 @keyframes entradaAvatar{
 to{
 opacity:1;
@@ -131,7 +164,17 @@ transform:translateX(-50%) scale(1.05);
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <!-- AVATAR -->
-<div id="avatarUsuario" class="avatar-esquina"></div>
+<div class="avatar-esquina">
+
+<div id="avatarUsuario"
+class="avatarEmoji">
+</div>
+
+<div class="avatarTexto">
+Tu Avatar
+</div>
+
+</div>
 
 <div id="escena">
 
@@ -150,7 +193,7 @@ loop>
 Un día Leo y Mariana encontraron un misterioso Plato del Bien Comer en su cocina.
 </p>
 
-<button id="boton" onclick="siguiente()">
+<button id="boton">
 Siguiente
 </button>
 
@@ -282,15 +325,23 @@ texto.classList.add("animar");
    SIGUIENTE ESCENA
 ========================= */
 
-async function siguiente(){
+function siguiente(){
 
 paso++;
 
-if(paso < historia.length){
+if(paso >= historia.length){
+
+return;
+
+}
+
+/* CAMBIAR TEXTO */
 
 document.getElementById(
 "cuento"
 ).innerText = historia[paso];
+
+/* CAMBIAR VIDEO */
 
 let video =
 document.getElementById(
@@ -303,6 +354,8 @@ video.load();
 
 video.play();
 
+/* CAMBIAR AUDIO */
+
 narrador.pause();
 
 narrador =
@@ -310,28 +363,25 @@ new Audio(audios[paso]);
 
 narrador.play().catch(()=>{});
 
+/* ANIMACIONES */
+
 animarEntrada();
 
 /* GUARDAR AVANCE */
 
 guardarPasoHistoria(paso);
 
-/* ÚLTIMO BOTÓN */
+/* CAMBIAR BOTÓN */
 
 if(paso === historia.length - 1){
 
-let boton =
+const boton =
 document.getElementById(
 "boton"
 );
 
-boton.innerText =
+boton.innerHTML =
 "🎮 Ir a los Juegos";
-
-boton.onclick =
-irAJuegos;
-
-}
 
 }
 
@@ -443,6 +493,31 @@ console.log(error);
 }
 
 }
+
+   /* =========================
+   BOTÓN
+========================= */
+
+document.getElementById(
+"boton"
+).addEventListener(
+"click",
+function(){
+
+if(
+paso === historia.length - 1
+){
+
+irAJuegos();
+
+}else{
+
+siguiente();
+
+}
+
+}
+);
 
 </script>
 
