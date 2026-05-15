@@ -469,41 +469,61 @@ iniciarAudio,
    SUPABASE
 ========================= */
 
-const _supabaseUrl =
-"https://jxdlneupjqlyxanydzdl.supabase.co";
-
-const _supabaseKey =
-"sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
-
-const supabase =
-window.supabase.createClient(
-    _supabaseUrl,
-    _supabaseKey
-);
-
 /* =========================
-   MOSTRAR AVATAR
+   SUPABASE Y REGISTRO DE AVANCE
 ========================= */
 
-const avatarGuardado =
-localStorage.getItem(
-"avatarSeleccionado"
-);
+const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
+const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
+const supabaseClient = window.supabase.createClient(_supabaseUrl, _supabaseKey);
 
-const avatar =
-document.getElementById(
-"avatar"
-);
+async function registrarAvance() {
+    const nombre = localStorage.getItem("nombreAlumno");
+    if (!nombre) return;
 
-if(avatarGuardado){
+    try {
+        // 1. Obtener el ID del alumno basándonos en su nombre
+        const { data: alumno, error: errorAlu } = await supabaseClient
+            .from('alumnos')
+            .select('id')
+            .eq('nombre_alumno', nombre)
+            .single();
 
-    avatar.innerHTML =
-    avatarGuardado;
+        if (errorAlu || !alumno) return;
 
-}else{
+        // 2. Registrar o actualizar el progreso en este archivo específico
+        // Usamos upsert para que si el alumno vuelve a entrar, solo se actualice la fecha/porcentaje
+        const { error: errorProg } = await supabaseClient
+            .from('progreso')
+            .upsert({
+                id_alumno: alumno.id,
+                archivo: "eo.html",
+                porcentaje: 10, // Porcentaje inicial por entrar a esta sección
+                completado: false,
+                fecha: new Date().toISOString()
+            }, { onConflict: 'id_alumno, archivo' }); 
+            // Nota: Para que el 'onConflict' funcione, 
+            // debes tener una restricción única en Supabase para id_alumno y archivo.
 
-    avatar.innerHTML = "🙂";
+        if (errorProg) console.error("Error al registrar progreso:", errorProg);
 
+    } catch (err) {
+        console.error("Error inesperado:", err);
+    }
+}
+
+// Ejecutar registro al cargar la página
+registrarAvance();
+
+/* =========================
+   MOSTRAR AVATAR (Existente)
+========================= */
+const avatarGuardado = localStorage.getItem("avatarSeleccionado");
+const avatarDiv = document.getElementById("avatar");
+if(avatarGuardado) {
+    avatarDiv.innerHTML = avatarGuardado;
+} else {
+    avatarDiv.innerHTML = "🙂";
 }
 
 /* =========================
