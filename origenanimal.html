@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>DishKids</title>
 
 <style>
-
-/* RESET */
+/* RESET Y ESTILO BASE */
 *{
     margin:0;
     padding:0;
@@ -17,44 +15,48 @@
 
 body{
     font-family:Arial,sans-serif;
+    overflow-x:hidden;
     min-height:100vh;
-    overflow:hidden;
+    background:linear-gradient(135deg,#fee2e2,#fecaca);
     display:flex;
     justify-content:center;
     align-items:center;
-    background:linear-gradient(135deg,#fee2e2,#fecaca);
     position:relative;
 }
 
-/* FONDO EMOJIS */
-.fondo{
-    position:fixed;
-    inset:0;
-    overflow:hidden;
-    z-index:0;
-    pointer-events:none;
+/* CORRECCIÓN EMOJIS: Aseguramos que el contenedor ocupe todo el espacio */
+.fondo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1; /* Detrás del contenido */
+    pointer-events: none;
 }
 
-.emoji{
-    position:absolute;
-    bottom:-100px;
-    font-size:40px;
-    opacity:0.25;
-    animation:flotar linear infinite;
+.emoji-flotante {
+    position: absolute;
+    bottom: -50px; /* Empiezan desde abajo */
+    font-size: 40px;
+    animation: flotar linear infinite;
+    opacity: 0.3;
 }
 
-@keyframes flotar{
-    from{ transform:translateY(110vh) rotate(0deg); }
-    to{ transform:translateY(-120vh) rotate(360deg); }
+@keyframes flotar {
+    from { transform: translateY(0) rotate(0deg); }
+    to { transform: translateY(-120vh) rotate(360deg); }
 }
 
-/* CONTENIDO */
+/* CONTENEDOR */
 .contenedor{
     position:relative;
-    z-index:2;
+    z-index:10; /* Por encima de los emojis */
     width:95%;
     max-width:1200px;
-    text-align:center;
+    padding:30px;
+    text-align: center;
 }
 
 /* AVATAR */
@@ -66,222 +68,148 @@ body{
     padding:15px 20px;
     border-radius:20px;
     display:flex;
-    gap:10px;
     align-items:center;
     box-shadow:0 8px 20px rgba(0,0,0,0.15);
-    z-index:10;
+    z-index: 20;
 }
 
-.avatarEmoji{
-    font-size:50px;
-}
+.avatarEmoji{ font-size:50px; }
 
-/* TITULO */
 h1{
-    font-size:48px;
+    font-size:50px;
     color:#991b1b;
-    margin-bottom:40px;
+    margin-bottom:50px;
 }
 
 /* TARJETAS */
 .tarjetas{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:25px;
+    gap:30px;
 }
 
 .tarjeta{
     background:white;
-    padding:30px;
-    border-radius:25px;
+    border-radius:30px;
+    padding:35px;
     cursor:pointer;
-    box-shadow:0 10px 20px rgba(0,0,0,0.15);
-    transition:0.3s;
+    transition:0.4s;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
 }
 
-.tarjeta:hover{
-    transform:scale(1.05);
-    background:#fef2f2;
-}
+.tarjeta:hover{ transform:scale(1.05); background:#fff1f2; }
 
-.icono{
-    font-size:70px;
-    margin-bottom:15px;
-}
+.icono{ font-size:80px; margin-bottom:20px; }
+
+.tarjeta p{ font-size:24px; color:#7f1d1d; }
 
 /* BOTONES */
 .botones{
-    margin-top:40px;
+    margin-top:60px;
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:15px;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
 }
 
 button{
-    padding:18px;
+    padding:20px;
     border:none;
-    border-radius:20px;
-    font-size:18px;
+    border-radius:25px;
+    font-size:20px;
     font-weight:bold;
-    color:white;
     cursor:pointer;
+    color:white;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
 }
 
-.verduras{background:#22c55e;}
-.cereales{background:#f59e0b;}
-.leguminosas{background:#8b5cf6;}
-.animal{background:#ef4444;}
-
+.verdes{ background:#22c55e; }
+.cereales{ background:#f59e0b; }
+.leguminosas{ background:#8b5cf6; }
 </style>
 </head>
 
 <body>
 
-<!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<!-- AUDIOS -->
 <audio id="audioInicio" src="Seccionanimal.mp3" preload="auto"></audio>
-<audio id="audio1" src="Origenanimal.mp3"></audio>
-<audio id="audio2" src="Importanciaorigenanimal.mp3"></audio>
+<audio id="audio1" src="Origenanimal.mp3" preload="auto"></audio>
+<audio id="audio2" src="Importanciaorigenanimal.mp3" preload="auto"></audio>
 
-<!-- FONDO -->
-<div class="fondo" id="fondo"></div>
+<div class="fondo" id="contenedor-emojis"></div>
 
-<!-- AVATAR -->
 <div class="avatarBox">
     <div class="avatarEmoji" id="avatar">🙂</div>
 </div>
 
-<!-- CONTENIDO -->
 <div class="contenedor">
+    <h1>🍗 Origen Animal 🥚</h1>
 
-<h1>🍗 Origen Animal 🥚</h1>
+    <div class="tarjetas">
+        <div class="tarjeta" onclick="reproducir('audio1')">
+            <div class="icono">🍗🥚🧀</div>
+            <p>Incluye carne, pollo, pescado, leche y huevo.</p>
+        </div>
 
-<div class="tarjetas">
+        <div class="tarjeta" onclick="reproducir('audio2')">
+            <div class="icono">💪⚡🥛</div>
+            <p>Aportan proteínas para crecer fuerte.</p>
+        </div>
+    </div>
 
-<div class="tarjeta" onclick="reproducir('audio1')">
-<div class="icono">🍗🥚🧀</div>
-<p>Incluye carne, pollo, pescado, leche y huevo.</p>
+    <div class="botones">
+        <button class="verdes" onclick="location.href='verdurasyfrutas.html'">🥦 Verduras</button>
+        <button class="cereales" onclick="location.href='cereales.html'">🌾 Cereales</button>
+        <button class="leguminosas" onclick="location.href='leguminosas.html'">🫘 Leguminosas</button>
+    </div>
 </div>
 
-<div class="tarjeta" onclick="reproducir('audio2')">
-<div class="icono">💪⚡🥛</div>
-<p>Aportan proteínas para crecer fuerte.</p>
-</div>
-
-</div>
-
-<div class="botones">
-
-<button class="verduras" onclick="location.href='verdurasyfrutas.html'">Verduras</button>
-<button class="cereales" onclick="location.href='cereales.html'">Cereales</button>
-<button class="leguminosas" onclick="location.href='leguminosas.html'">Leguminosas</button>
-<button class="animal" onclick="location.href='origenanimal.html'">Origen Animal</button>
-
-</div>
-
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
-
 /* =========================
-   SUPABASE (CORREGIDO)
+   SOLUCIÓN DE AUDIO
+   Los navegadores bloquean el audio automático. 
+   Se necesita un clic en cualquier parte para activarlos.
 ========================= */
-const supabase = window.supabase.createClient(
-  "https://jxdlneupjqlyxanydzdl.supabase.co",
-  "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV"
-);
-
-/* =========================
-   AUDIO INICIO (SEGURO)
-========================= */
-const audioInicio = document.getElementById("audioInicio");
-
-function playInicio(){
-    audioInicio.play().catch(()=>{});
+function activarAudio() {
+    const inicio = document.getElementById("audioInicio");
+    inicio.play().catch(e => console.log("Esperando interacción..."));
+    // Una vez activado, removemos el evento para que no se repita el audio de inicio
+    document.body.removeEventListener('click', activarAudio);
 }
 
-window.addEventListener("load", () => {
+document.body.addEventListener('click', activarAudio);
 
-    playInicio();
+window.onload = () => {
+    crearEmojis();
+    const avatar = localStorage.getItem("avatarSeleccionado") || "🙂";
+    document.getElementById("avatar").innerHTML = avatar;
+};
 
-    document.body.addEventListener("click", () => {
-        playInicio();
-    }, { once:true });
-
-    registrarEntrada();
-});
-
-/* =========================
-   REPRODUCIR AUDIOS
-========================= */
-function reproducir(id){
+function reproducir(id) {
     const a = document.getElementById(id);
     a.currentTime = 0;
-    a.play().catch(()=>{});
-
-    registrarAccion(id);
+    a.play().catch(e => alert("Haz clic en la pantalla primero para activar el sonido"));
 }
 
 /* =========================
-   SUPABASE: REGISTRO
+   SOLUCIÓN EMOJIS
 ========================= */
+function crearEmojis() {
+    const lista = ["🍗","🥚","🧀","🐟","🥛","🍖"];
+    const contenedor = document.getElementById("contenedor-emojis");
 
-async function registrarEntrada(){
-
-    const nombre = localStorage.getItem("nombreAlumno");
-    const avatar = localStorage.getItem("avatarSeleccionado");
-
-    if(!nombre) return;
-
-    await supabase.from("actividad").insert([{
-        nombre,
-        avatar,
-        seccion:"Origen Animal",
-        accion:"Entró a la sección"
-    }]);
+    for(let i=0; i<30; i++) {
+        const span = document.createElement("span");
+        span.className = "emoji-flotante";
+        span.innerHTML = lista[Math.floor(Math.random()*lista.length)];
+        
+        span.style.left = Math.random() * 100 + "%";
+        span.style.animationDuration = (5 + Math.random() * 10) + "s";
+        span.style.animationDelay = (Math.random() * 5) + "s";
+        span.style.fontSize = (20 + Math.random() * 30) + "px";
+        
+        contenedor.appendChild(span);
+    }
 }
-
-async function registrarAccion(id){
-
-    const nombre = localStorage.getItem("nombreAlumno");
-    const avatar = localStorage.getItem("avatarSeleccionado");
-
-    let accion = "";
-
-    if(id === "audio1") accion = "Escuchó información";
-    if(id === "audio2") accion = "Escuchó importancia";
-
-    await supabase.from("actividad").insert([{
-        nombre,
-        avatar,
-        seccion:"Origen Animal",
-        accion
-    }]);
-}
-
-/* =========================
-   EMOJIS FLOTANTES
-========================= */
-
-const emojis = ["🍗","🥚","🧀","🐟","🥛","🍖","💪","⚡"];
-const fondo = document.getElementById("fondo");
-
-for(let i=0;i<50;i++){
-    const span = document.createElement("span");
-    span.classList.add("emoji");
-    span.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
-
-    span.style.left = Math.random()*100 + "%";
-    span.style.fontSize = (20 + Math.random()*40) + "px";
-    span.style.animationDuration = (8 + Math.random()*10) + "s";
-    span.style.animationDelay = Math.random()*5 + "s";
-
-    fondo.appendChild(span);
-}
-
 </script>
-
 </body>
 </html>
