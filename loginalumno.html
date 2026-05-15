@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio de sesión - Plato del Bien Comer</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { margin:0; height:100vh; display:flex; justify-content:center; align-items:center; background:linear-gradient(135deg,#f5e6d3,#f1dcc3); font-family:'Comic Sans MS',cursive; }
+        .login-box { background:#fff7ec; padding:60px; border-radius:30px; box-shadow:0 15px 35px rgba(0,0,0,0.15); text-align:center; width:520px; }
+        .titulo span { display:inline-block; font-size:36px; color:#8b6f47; animation:flotar 2s infinite ease-in-out; }
+        .titulo span:nth-child(1){animation-delay:0s} .titulo span:nth-child(2){animation-delay:0.1s} .titulo span:nth-child(3){animation-delay:0.2s} .titulo span:nth-child(4){animation-delay:0.3s} .titulo span:nth-child(5){animation-delay:0.4s} .titulo span:nth-child(6){animation-delay:0.5s} .titulo span:nth-child(7){animation-delay:0.6s} .titulo span:nth-child(8){animation-delay:0.7s} .titulo span:nth-child(9){animation-delay:0.8s} .titulo span:nth-child(10){animation-delay:0.9s}
+        @keyframes flotar { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-12px)} }
+        p { font-size:22px; color:#7a6144; }
+        input { margin-top:30px; padding:16px; width:85%; border-radius:18px; border:2px solid #e4c9a8; background:#fffdf8; font-size:20px; text-align:center; outline:none; transition:0.3s; }
+        button { margin-top:30px; padding:16px 40px; border:none; border-radius:25px; background:#e6c9a8; color:#5c4630; font-size:20px; cursor:pointer; transition:0.3s; }
+        button:hover { background:#d9b38c; transform:scale(1.08); }
+        .decoracion { font-size:40px; margin-bottom:15px; }
+        #mensaje { margin-top:15px; font-size:16px; color:#c0392b; min-height:24px; }
+    </style>
+</head>
+<body>
+<div class="login-box">
+    <div class="decoracion">🌟📚🧸</div>
+    <div class="titulo">
+        <span>B</span><span>I</span><span>E</span><span>N</span><span>V</span><span>E</span><span>N</span><span>I</span><span>D</span><span>O</span>
+    </div>
+    <p>Introduce tu nombre:</p>
+    <input type="text" id="nombreInput" placeholder="Tu nombre" required>
+    <br>
+    <button onclick="iniciarJuego()">Entrar</button>
+    <div id="mensaje"></div>
+</div>
+<script>
+    const _supabaseUrl = 'https://jxdlneupjqlyxanydzdl.supabase.co';
+    const _supabaseKey = 'sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV';
+    const _supabase = supabase.createClient(_supabaseUrl, _supabaseKey);
+
+    async function iniciarJuego() {
+        const nombre = document.getElementById("nombreInput").value.trim();
+        const msg = document.getElementById("mensaje");
+        if (nombre === "") { msg.textContent = "Por favor, escribe tu nombre."; return; }
+        msg.textContent = "Cargando...";
+        try {
+            const { data, error } = await _supabase.from('alumnos').select('id, nombre_alumno').eq('nombre_alumno', nombre);
+            if (error) console.error("Error al buscar alumno:", error);
+            let id_alumno = null;
+            if (!data || data.length === 0) {
+                const { data: insertData, error: insertError } = await _supabase.from('alumnos').insert([{ nombre_alumno: nombre }]).select('id');
+                if (insertError) { console.error("Error al registrar:", insertError); }
+                else { id_alumno = insertData[0].id; }
+            } else {
+                id_alumno = data[0].id;
+            }
+            localStorage.setItem("nombreAlumno", nombre);
+            if (id_alumno) localStorage.setItem("id_alumno", id_alumno);
+            window.location.href = "./avatar.html";
+        } catch (err) {
+            console.error("Error de conexión:", err);
+            localStorage.setItem("nombreAlumno", nombre);
+            window.location.href = "./avatar.html";
+        }
+    }
+    document.getElementById("nombreInput").addEventListener("keydown", function(e){ if(e.key === "Enter") iniciarJuego(); });
+</script>
+</body>
+</html>
