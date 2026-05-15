@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>DishKids</title>
 
 <style>
-/* RESET Y ESTILO BASE */
+/* ESTILOS EXACTOS A LA IMAGEN PROPORCIONADA */
 *{
     margin:0;
     padding:0;
@@ -17,6 +18,7 @@ body{
     font-family:Arial,sans-serif;
     overflow-x:hidden;
     min-height:100vh;
+    /* Fondo degradado rojizo para Origen Animal */
     background:linear-gradient(135deg,#fee2e2,#fecaca);
     display:flex;
     justify-content:center;
@@ -25,41 +27,42 @@ body{
 }
 
 /* FONDO EMOJIS */
-.fondo {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 1;
-    pointer-events: none;
+.fondo{
+    position:fixed;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    z-index:0;
 }
 
-.emoji-flotante {
-    position: absolute;
-    bottom: -50px;
-    font-size: 40px;
-    animation: flotar linear infinite;
-    opacity: 0.3;
+.emoji{
+    position:absolute;
+    font-size:40px;
+    animation:flotar linear infinite;
+    opacity:0.25;
 }
 
-@keyframes flotar {
-    from { transform: translateY(0) rotate(0deg); }
-    to { transform: translateY(-120vh) rotate(360deg); }
+@keyframes flotar{
+    from{ transform:translateY(110vh) rotate(0deg); }
+    to{ transform:translateY(-120vh) rotate(360deg); }
 }
 
-/* CONTENEDOR */
+/* CONTENEDOR PRINCIPAL */
 .contenedor{
     position:relative;
-    z-index:10;
+    z-index:2;
     width:95%;
     max-width:1200px;
     padding:30px;
-    text-align: center;
+    animation:entrada 1s ease;
 }
 
-/* AVATAR */
+@keyframes entrada{
+    from{ opacity:0; transform:translateY(50px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+/* AVATAR BOX */
 .avatarBox{
     position:absolute;
     top:20px;
@@ -69,16 +72,26 @@ body{
     border-radius:20px;
     display:flex;
     align-items:center;
+    gap:12px;
     box-shadow:0 8px 20px rgba(0,0,0,0.15);
-    z-index: 20;
+    animation:avatarEntrada 1s ease;
+}
+
+@keyframes avatarEntrada{
+    from{ opacity:0; transform:translateX(-40px); }
+    to{ opacity:1; transform:translateX(0); }
 }
 
 .avatarEmoji{ font-size:50px; }
 
+/* TITULO */
 h1{
+    text-align:center;
     font-size:50px;
-    color:#991b1b;
+    color:#991b1b; /* Rojo oscuro */
+    margin-top:60px;
     margin-bottom:50px;
+    animation:titulo 1s ease;
 }
 
 /* TARJETAS */
@@ -95,20 +108,37 @@ h1{
     cursor:pointer;
     transition:0.4s;
     box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    text-align:center;
+    animation:tarjetaEntrada 1.2s ease;
 }
 
-.tarjeta:hover{ transform:scale(1.05); background:#fff1f2; }
+.tarjeta:hover{
+    transform:scale(1.05) rotate(1deg);
+    background:#fff1f2;
+}
 
-.icono{ font-size:80px; margin-bottom:20px; }
+.icono{
+    font-size:80px;
+    margin-bottom:20px;
+    animation:rebote 2s infinite;
+}
 
-.tarjeta p{ font-size:24px; color:#7f1d1d; }
+@keyframes rebote{
+    0%, 100%{ transform:translateY(0); }
+    50%{ transform:translateY(-10px); }
+}
 
-/* BOTONES ALINEADOS */
+.tarjeta p{
+    font-size:24px;
+    line-height:1.6;
+    color:#7f1d1d;
+}
+
+/* BOTONES INFERIORES */
 .botones{
-    margin-top:40px;
+    margin-top:60px;
     display:grid;
-    /* Ajustado para que todos quepan en la misma fila si hay espacio */
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); 
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
     gap:20px;
 }
 
@@ -120,111 +150,114 @@ button{
     font-weight:bold;
     cursor:pointer;
     color:white;
+    transition:0.3s;
     box-shadow:0 8px 20px rgba(0,0,0,0.15);
-    transition: 0.3s;
-    width: 100%; /* Asegura que todos midan lo mismo dentro de su celda */
 }
 
-button:hover {
-    transform: scale(1.05);
-}
+button:hover{ transform:scale(1.08); }
 
+/* COLORES DE BOTONES SEGÚN EL DISEÑO */
 .verdes{ background:#22c55e; }
 .cereales{ background:#f59e0b; }
 .leguminosas{ background:#8b5cf6; }
-
-/* BOTÓN AZUL - AHORA IGUAL AL RESTO */
-.sigue-adelante {
-    background: #3b82f6; 
-}
-
-.sigue-adelante:hover {
-    background: #2563eb;
-}
+.sigue-adelante{ background:#3b82f6; }
 
 </style>
 </head>
 
 <body>
 
-<audio id="audioInicio" src="Seccionanimal.mp3" preload="auto"></audio>
-<audio id="audio1" src="Origenanimal.mp3" preload="auto"></audio>
-<audio id="audio2" src="Importanciaorigenanimal.mp3" preload="auto"></audio>
+<audio id="audioInicio" src="Seccionanimal.mp3"></audio>
+<audio id="audio1" src="Origenanimal.mp3"></audio>
+<audio id="audio2" src="Importanciaorigenanimal.mp3"></audio>
 
-<div class="fondo" id="contenedor-emojis"></div>
+<div class="fondo" id="fondo"></div>
 
 <div class="avatarBox">
-    <div class="avatarEmoji" id="avatar">🙂</div>
+    <div class="avatarEmoji" id="avatar"></div>
 </div>
 
 <div class="contenedor">
     <h1>🍗 Origen Animal 🥚</h1>
 
     <div class="tarjetas">
-        <div class="tarjeta" onclick="reproducir('audio1')">
-            <div class="icono">🍗🥚🧀</div>
-            <p>Incluye carne, pollo, pescado, leche y huevo.</p>
+        <div class="tarjeta" onclick="reproducirAudio('audio1')">
+            <div class="icono">🍗🥚🧀🐟</div>
+            <p>Incluye carne, pollo, pescado, leche, queso y huevo.</p>
         </div>
 
-        <div class="tarjeta" onclick="reproducir('audio2')">
-            <div class="icono">💪⚡🥛</div>
-            <p>Aportan proteínas para crecer fuerte.</p>
+        <div class="tarjeta" onclick="reproducirAudio('audio2')">
+            <div class="icono">💪⚡🥛🥩</div>
+            <p>Los alimentos de origen animal nos aportan proteínas para crecer fuertes y sanos.</p>
         </div>
     </div>
 
     <div class="botones">
-        <button class="verdes" onclick="location.href='verdurasyfrutas.html'">🥦 Verduras</button>
-        <button class="cereales" onclick="location.href='cereales.html'">🌾 Cereales</button>
-        <button class="leguminosas" onclick="location.href='leguminosas.html'">🫘 Leguminosas</button>
-        <button class="sigue-adelante" onclick="location.href='Hisoria.html'">🚀 Sigue Adelante</button>
+        <button class="verdes" onclick="window.location.href='verdurasyfrutas.html'">
+            🥦 Verduras y Frutas
+        </button>
+
+        <button class="cereales" onclick="window.location.href='cereales.html'">
+            🌾 Cereales
+        </button>
+
+        <button class="leguminosas" onclick="window.location.href='leguminosas.html'">
+            🫘 Leguminosas
+        </button>
+
+        <button class="sigue-adelante" onclick="window.location.href='Historia.html'">
+            🚀 Sigue Adelante
+        </button>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
-/* =========================
-   SOLUCIÓN DE AUDIO
-========================= */
-function activarAudio() {
-    const inicio = document.getElementById("audioInicio");
-    inicio.play().catch(e => console.log("Esperando interacción..."));
-    document.body.removeEventListener('click', activarAudio);
-}
+/* REPRODUCCIÓN AUTOMÁTICA AL CARGAR */
+window.onload = function(){
+    const audio = document.getElementById("audioInicio");
+    // Nota: El navegador puede bloquear el audio si no ha habido interacción previa.
+    // Esta función intenta reproducirlo inmediatamente.
+    audio.play().catch(error => {
+        console.log("El audio se reproducirá tras el primer clic del usuario.");
+    });
 
-document.body.addEventListener('click', activarAudio);
-
-window.onload = () => {
     crearEmojis();
-    const avatar = localStorage.getItem("avatarSeleccionado") || "🙂";
-    document.getElementById("avatar").innerHTML = avatar;
+    cargarAvatar();
 };
 
-function reproducir(id) {
-    const a = document.getElementById(id);
-    a.currentTime = 0;
-    a.play().catch(e => alert("Haz clic en la pantalla primero para activar el sonido"));
+/* FUNCIÓN CARGAR AVATAR */
+function cargarAvatar() {
+    const avatarGuardado = localStorage.getItem("avatarSeleccionado");
+    const divAvatar = document.getElementById("avatar");
+    divAvatar.innerHTML = avatarGuardado ? avatarGuardado : "🙂";
 }
 
-/* =========================
-   SOLUCIÓN EMOJIS
-========================= */
-function crearEmojis() {
-    const lista = ["🍗","🥚","🧀","🐟","🥛","🍖"];
-    const contenedor = document.getElementById("contenedor-emojis");
+/* FUNCIÓN REPRODUCIR AUDIOS DE TARJETAS */
+function reproducirAudio(id){
+    const audio = document.getElementById(id);
+    audio.currentTime = 0;
+    audio.play();
+}
 
-    for(let i=0; i<30; i++) {
+/* EMOJIS FLOTANTES (PERSONALIZADOS PARA ORIGEN ANIMAL) */
+function crearEmojis() {
+    const emojis = ["🍗","🥚","🧀","🐟","🥛","🥩","🍖"];
+    const fondo = document.getElementById("fondo");
+
+    for(let i=0; i<35; i++){
         const span = document.createElement("span");
-        span.className = "emoji-flotante";
-        span.innerHTML = lista[Math.floor(Math.random()*lista.length)];
+        span.classList.add("emoji");
+        span.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
         
-        span.style.left = Math.random() * 100 + "%";
-        span.style.animationDuration = (5 + Math.random() * 10) + "s";
-        span.style.animationDelay = (Math.random() * 5) + "s";
-        span.style.fontSize = (20 + Math.random() * 30) + "px";
-        
-        contenedor.appendChild(span);
+        span.style.left = Math.random()*100 + "%";
+        span.style.animationDuration = (8 + Math.random()*10) + "s";
+        span.style.fontSize = (25 + Math.random()*35) + "px";
+        span.style.animationDelay = Math.random()*5 + "s";
+
+        fondo.appendChild(span);
     }
 }
 </script>
+
 </body>
 </html>
