@@ -360,9 +360,26 @@ button:hover{
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    
 <script>
 
-/* OBTENER AVATAR */
+/* =========================
+   CONFIGURAR SUPABASE
+========================= */
+
+const SUPABASE_URL = "https://TU-PROYECTO.supabase.co";
+
+const SUPABASE_KEY = "TU-API-KEY";
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+/* =========================
+   MOSTRAR AVATAR
+========================= */
 
 const avatarGuardado =
 localStorage.getItem("avatarSeleccionado");
@@ -379,6 +396,51 @@ if(avatarGuardado){
     avatar.innerHTML = "🙂";
 
 }
+
+/* =========================
+   GUARDAR EN SUPABASE
+========================= */
+
+async function guardarUsuario(){
+
+    const nombre =
+    localStorage.getItem("nombreAlumno");
+
+    const avatarSeleccionado =
+    localStorage.getItem("avatarSeleccionado");
+
+    if(!nombre || !avatarSeleccionado){
+
+        console.log("Faltan datos");
+
+        return;
+    }
+
+    const { data, error } =
+    await supabase
+    .from("usuarios")
+    .insert([
+        {
+            nombre:nombre,
+            avatar:avatarSeleccionado
+        }
+    ]);
+
+    if(error){
+
+        console.log("Error:",error);
+
+    }else{
+
+        console.log("Usuario guardado");
+
+    }
+
+}
+
+/* EJECUTAR */
+
+guardarUsuario();
 
 </script>
 
