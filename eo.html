@@ -301,7 +301,11 @@ button:hover{
 
 <body>
     <!-- AUDIO DE BIENVENIDA -->
-<audio id="audioBienvenida" src="Audio bienvenida.mp3"></audio>
+<audio
+id="audioBienvenida"
+src="Audio_bienvenida.mp3"
+preload="auto">
+</audio>
 
 <!-- AVATAR -->
 <div class="avatarBox">
@@ -368,14 +372,63 @@ button:hover{
    AUDIO AUTOMÁTICO
 ========================= */
 
-window.onload = function(){
+/* =========================
+   AUDIO DE BIENVENIDA
+========================= */
 
-    const audio =
-    document.getElementById("audioBienvenida");
+window.addEventListener(
+"load",
+() => {
 
-    audio.play().catch(()=>{});
+const audio =
+document.getElementById(
+"audioBienvenida"
+);
+
+/* INTENTAR REPRODUCIR */
+
+const reproducir = () => {
+
+audio.volume = 1;
+
+audio.play()
+.then(()=>{
+
+console.log(
+"Audio reproducido"
+);
+
+})
+.catch(error=>{
+
+console.log(
+"No se pudo reproducir:",
+error
+);
+
+});
 
 };
+
+/* REPRODUCIR */
+
+reproducir();
+
+/* SI EL NAVEGADOR BLOQUEA,
+   SE REPRODUCE AL PRIMER CLICK */
+
+document.body.addEventListener(
+"click",
+() => {
+
+reproducir();
+
+},
+{ once:true }
+);
+
+}
+);
 
 /* =========================
    CONFIGURAR SUPABASE
