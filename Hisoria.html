@@ -325,7 +325,11 @@ texto.classList.add("animar");
 
 function siguiente(){
 
+/* AUMENTAR PASO */
+
 paso++;
+
+/* SI YA TERMINÓ */
 
 if(paso >= historia.length){
 
@@ -333,43 +337,62 @@ return;
 
 }
 
-/* CAMBIAR TEXTO */
+/* TEXTO */
 
+const cuento =
 document.getElementById(
 "cuento"
-).innerText = historia[paso];
+);
 
-/* CAMBIAR VIDEO */
+cuento.innerText =
+historia[paso];
 
-let video =
+/* VIDEO */
+
+const video =
 document.getElementById(
 "imagen"
 );
 
-video.src = imagenes[paso];
+/* DETENER */
+
+video.pause();
+
+/* CAMBIAR VIDEO */
+
+video.src =
+imagenes[paso];
+
+/* RECARGAR */
 
 video.load();
 
-video.play();
+/* REPRODUCIR */
 
-/* CAMBIAR AUDIO */
+video.play().catch(()=>{});
+
+/* AUDIO */
 
 narrador.pause();
 
+narrador.currentTime = 0;
+
 narrador =
-new Audio(audios[paso]);
+new Audio(
+audios[paso]
+);
 
 narrador.play().catch(()=>{});
 
-/* ANIMACIONES */
+/* ANIMACIÓN */
 
 animarEntrada();
 
-/* GUARDAR AVANCE */
+/* SUPABASE */
 
 guardarPasoHistoria(paso);
 
-/* CAMBIAR BOTÓN */
+/* ÚLTIMO PASO */
 
 if(paso === historia.length - 1){
 
@@ -496,14 +519,17 @@ console.log(error);
    BOTÓN
 ========================= */
 
+const boton =
 document.getElementById(
 "boton"
-).addEventListener(
+);
+
+boton.addEventListener(
 "click",
-function(){
+() => {
 
 if(
-paso === historia.length - 1
+paso >= historia.length - 1
 ){
 
 irAJuegos();
