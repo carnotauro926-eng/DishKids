@@ -389,97 +389,78 @@ button:hover{
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+/* =========================
+   CONFIGURACIÓN SUPABASE
+========================= */
+const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
+const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
+const supabaseClient = supabase.createClient(_supabaseUrl, _supabaseKey);
+
+async function registrarAvance() {
+    const nombre = localStorage.getItem("nombreAlumno");
+    if (!nombre) return;
+
+    // 1. Buscamos al alumno para obtener su ID
+    const { data: alumno } = await supabaseClient
+        .from('alumnos')
+        .select('id')
+        .eq('nombre_alumno', nombre)
+        .single();
+
+    if (alumno) {
+        // 2. Registramos que está en la sección de Cereales
+        await supabaseClient.from('progreso').upsert({
+            id_alumno: alumno.id,
+            archivo: "cereales.html",
+            porcentaje: 60, // Progreso del 60%
+            completado: false,
+            fecha: new Date().toISOString()
+        }, { onConflict: 'id_alumno, archivo' });
+    }
+}
 
 /* =========================
-   AUDIO AUTOMÁTICO
+   LÓGICA DE LA PÁGINA
 ========================= */
 
 window.onload = function(){
+    registrarAvance(); // Registrar progreso al cargar
 
-    const audio =
-    document.getElementById("audioInicio");
-
+    const audio = document.getElementById("audioInicio");
     audio.play().catch(()=>{});
 
+    // Cargar Avatar
+    const avatarGuardado = localStorage.getItem("avatarSeleccionado");
+    const avatar = document.getElementById("avatar");
+    avatar.innerHTML = avatarGuardado || "🙂";
+
+    crearEmojis();
 };
 
-/* =========================
-   AVATAR
-========================= */
-
-const avatarGuardado =
-localStorage.getItem("avatarSeleccionado");
-
-const avatar =
-document.getElementById("avatar");
-
-if(avatarGuardado){
-
-    avatar.innerHTML = avatarGuardado;
-
-}else{
-
-    avatar.innerHTML = "🙂";
-
-}
-
-/* =========================
-   REPRODUCIR AUDIOS
-========================= */
-
 function reproducirAudio(id){
-
-    const audio =
-    document.getElementById(id);
-
+    const audio = document.getElementById(id);
     audio.currentTime = 0;
-
     audio.play();
-
 }
 
-/* =========================
-   EMOJIS FLOTANTES
-========================= */
-
-const emojis = [
-"🌾","🌽","🍞","🥖",
-"🍚","🥣","🌮","🍝",
-"🥐","🫓","🍪","🥨"
-];
-
-const fondo =
-document.getElementById("fondo");
-
-for(let i=0;i<40;i++){
-
-    const span =
-    document.createElement("span");
-
-    span.classList.add("emoji");
-
-    span.innerHTML =
-    emojis[Math.floor(Math.random()*emojis.length)];
-
-    span.style.left =
-    Math.random()*100 + "%";
-
-    span.style.animationDuration =
-    (8 + Math.random()*10) + "s";
-
-    span.style.fontSize =
-    (25 + Math.random()*35) + "px";
-
-    span.style.animationDelay =
-    Math.random()*5 + "s";
-
-    fondo.appendChild(span);
-
+function crearEmojis() {
+    const emojis = ["🌾","🌽","🍞","🥖","🍚","🥣","🌮","🍝","🥐","🫓","🍪","🥨"];
+    const fondo = document.getElementById("fondo");
+    for(let i=0;i<40;i++){
+        const span = document.createElement("span");
+        span.classList.add("emoji");
+        span.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+        span.style.left = Math.random()*100 + "%";
+        span.style.animationDuration = (8 + Math.random()*10) + "s";
+        span.style.fontSize = (25 + Math.random()*35) + "px";
+        span.style.animationDelay = Math.random()*5 + "s";
+        fondo.appendChild(span);
+    }
 }
-
 </script>
-
 
     
 </body>
