@@ -5,544 +5,251 @@
 <title>DishKids</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap');
 
 body{
-font-family: Comic Sans MS;
-background:#F5E6D3;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
-overflow:hidden;
+    margin:0;
+    font-family:'Baloo 2', cursive;
+    text-align:center;
+    background: linear-gradient(135deg,#ff6ec4,#7873f5,#4ade80);
+    background-size: 300% 300%;
+    animation: bgMove 10s ease infinite;
+    color:white;
+    overflow-x:hidden;
 }
 
-/* AVATAR */
-
-.avatar-esquina{
-position:absolute;
-
-top:20px;
-left:20px;
-
-background:white;
-
-padding:15px 20px;
-
-border-radius:20px;
-
-display:flex;
-align-items:center;
-gap:12px;
-
-box-shadow:
-0 8px 20px rgba(0,0,0,0.15);
-
-z-index:9999;
-
-animation:
-avatarEntrada 1s ease;
+@keyframes bgMove{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
 }
 
-@keyframes avatarEntrada{
-
-from{
-opacity:0;
-transform:translateX(-40px);
+/* 🎬 ANIMACIONES DE ENTRADA */
+@keyframes dropTitle{
+    from{opacity:0; transform:translateY(-60px);}
+    to{opacity:1; transform:translateY(0);}
 }
 
-to{
-opacity:1;
-transform:translateX(0);
+@keyframes zoomIn{
+    from{opacity:0; transform:scale(0.5);}
+    to{opacity:1; transform:scale(1);}
 }
 
+@keyframes fadeUp{
+    from{opacity:0; transform:translateY(40px);}
+    to{opacity:1; transform:translateY(0);}
 }
 
-.avatarEmoji{
-font-size:50px;
-}
-
-.avatarTexto{
-font-size:20px;
-font-weight:bold;
-color:#5c4630;
-}
-   
-@keyframes entradaAvatar{
-to{
-opacity:1;
-transform:scale(1) rotate(0deg);
-}
-}
-
-#escena{
-background:#c3eaf6;
-width:900px;
-height:650px;
-border-radius:25px;
-box-shadow:0 0 25px rgba(0,0,0,0.2);
-padding:30px;
-text-align:center;
-position:relative;
-overflow:hidden;
-}
-
+/* título */
 h1{
-color:#000000;
-font-size:32px;
+    margin-top:20px;
+    font-size:40px;
+    animation: dropTitle 1s ease forwards;
 }
 
-#personaje{
-height:380px;
-display:flex;
-justify-content:center;
-align-items:center;
+/* círculo */
+#circle{
+    width:320px;
+    height:320px;
+    border-radius:50%;
+    margin:20px auto;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:18px;
+
+    background: rgba(255,255,255,0.15);
+    border: 3px dashed rgba(255,255,255,0.6);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+    animation: zoomIn 1s ease forwards;
+    transition: transform 0.3s;
 }
 
-#personaje video{
-width:700px;
-height:360px;
-border-radius:15px;
-animation: flotar 3s infinite ease-in-out;
+#circle:hover{
+    transform: scale(1.05);
 }
 
-@keyframes flotar{
-0%{transform:translateY(0px);}
-50%{transform:translateY(-15px);}
-100%{transform:translateY(0px);}
+/* contenedor */
+#foodWrapper{
+    margin-top:20px;
 }
 
-/* Animación de entrada */
-@keyframes entrada{
-0%{
-opacity:0;
-transform:translateY(40px) scale(0.95);
-}
-100%{
-opacity:1;
-transform:translateY(0px) scale(1);
-}
+/* filas */
+.foodRow{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:10px 0;
 }
 
-.animar{
-animation: entrada 0.7s ease;
+/* emojis */
+.food{
+    font-size:32px;
+    cursor:grab;
+    padding:12px;
+    background: rgba(255,255,255,0.25);
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.2s, background 0.3s;
+
+    opacity:0;
+    animation: fadeUp 0.6s ease forwards;
 }
 
-#cuento{
-font-size:22px;
-margin-top:20px;
-min-height:120px;
-padding:0 20px;
+.food:nth-child(odd){
+    animation-delay:0.2s;
+}
+.food:nth-child(even){
+    animation-delay:0.4s;
 }
 
-button{
-padding:14px 30px;
-font-size:20px;
-background:#6b8e6b;
-color:white;
-border:none;
-border-radius:12px;
-cursor:pointer;
-position:absolute;
-bottom:25px;
-left:50%;
-transform:translateX(-50%);
-transition:0.3s;
+.food:hover{
+    transform: scale(1.2) rotate(5deg);
+    background: rgba(255,255,255,0.5);
 }
 
-button:hover{
-background:#4f6f4f;
-transform:translateX(-50%) scale(1.05);
+/* botones */
+button, a.button{
+    padding:12px 18px;
+    margin:10px;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+    text-decoration:none;
+    color:white;
+
+    background: linear-gradient(45deg,#ff4d6d,#ffb703);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+
+    transition: all 0.3s ease;
+
+    opacity:0;
+    animation: fadeUp 1s ease forwards;
 }
 
+button:hover, a.button:hover{
+    transform: scale(1.1);
+    box-shadow: 0 0 20px white;
+}
+
+/* resultado */
+#result{
+    font-size:22px;
+    margin-top:15px;
+    font-weight:bold;
+    animation: fadeUp 1s ease;
+}
 </style>
 </head>
 
 <body>
 
-<!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<h1>Crea tu Plato Saludable</h1>
 
-<!-- AVATAR -->
-<div class="avatar-esquina">
+<audio id="welcomeAudio" autoplay>
+    <source src="bienvenida.mp3" type="audio/mpeg">
+</audio>
 
-<div id="avatarUsuario"
-class="avatarEmoji">
+<div id="circle" ondrop="drop(event)" ondragover="allowDrop(event)">
+    Arrastra aquí tu comida
 </div>
 
-
-
+<div id="foodWrapper">
+    <div id="row1" class="foodRow"></div>
+    <div id="row2" class="foodRow"></div>
 </div>
 
-<div id="escena">
+<button onclick="checkPlate()">OK</button>
+<button onclick="resetGame()">Crear otro plato</button>
+<a class="button" href="entrada juegos.html">Ir al área de juegos</a>
 
-<h1>La Aventura del Plato del Bien Comer</h1>
-
-<div id="personaje">
-<video id="imagen"
-src="Historia1.mp4"
-autoplay
-muted
-loop>
-</video>
-</div>
-
-<p id="cuento">
-Un día Leo y Mariana encontraron un misterioso Plato del Bien Comer en su cocina.
-</p>
-
-<button id="boton">
-Siguiente
-</button>
-
-</div>
+<div id="result"></div>
 
 <script>
+const healthyFoods = ["🥦","🥕","🍎","🍌","🍇","🍉","🥗","🌽","🍓","🥑"];
+const unhealthyFoods = ["🍔","🍟","🍕","🌭","🍩","🍪","🍫","🥤","🍦","🍿"];
 
-/* =========================
-   SUPABASE
-========================= */
+let selected = [];
 
-const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
-const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV"
-const supabase =
-window.supabase.createClient(
-_supabaseUrl,
-_supabaseKey
-);
-
-/* =========================
-   MOSTRAR AVATAR
-========================= */
-
-const avatar =
-localStorage.getItem(
-'avatarSeleccionado'
-);
-
-if(avatar){
-
-document.getElementById(
-'avatarUsuario'
-).innerText = avatar;
-
+function shuffle(array){
+    return array.sort(() => Math.random() - 0.5);
 }
 
-/* =========================
-   VARIABLES
-========================= */
+function loadFoods(){
+    selected = [];
 
-let paso = 0;
+    let foods = shuffle([...healthyFoods, ...unhealthyFoods]);
 
-let historia = [
+    let row1 = document.getElementById("row1");
+    let row2 = document.getElementById("row2");
 
-"Un día Leo y Mariana encontraron un misterioso Plato del Bien Comer en su cocina.",
+    row1.innerHTML = "";
+    row2.innerHTML = "";
 
-"El plato tenía muchos colores y representaba los diferentes alimentos que ayudan al cuerpo a crecer sano y fuerte.",
-
-"Leo y Mariana comenzaron a observar cada parte del plato con mucha curiosidad.",
-
-"Primero descubrieron el grupo de las frutas y verduras, que ayudan a proteger el cuerpo y mantenerlo saludable.",
-
-"Después observaron los cereales, que dan energía para correr, jugar y aprender todos los días.",
-
-"También encontraron las leguminosas y alimentos de origen animal, que ayudan al cuerpo a crecer fuertes.",
-
-"Al final, Leo y Mariana comprendieron que comer de todos los grupos del Plato del Bien Comer es la mejor forma de cuidar su salud.",
-
-"Gracias por escuchar nuestra historia ¡Nos vemos en la próxima aventura saludable!"
-
-];
-
-let imagenes = [
-
-"Historia1.mp4",
-"Historia2.mp4",
-"Historia3.mp4",
-"Historia4.mp4",
-"Historia5.mp4",
-"Historia6.mp4",
-"Historia7.mp4",
-"Historia8.mp4"
-
-];
-
-let audios = [
-
-"1.mp3",
-"2.mp3",
-"3.mp3",
-"4.mp3",
-"5.mp3",
-"6.mp3",
-"7.mp3",
-"8.mp3"
-
-];
-
-let narrador =
-new Audio(audios[0]);
-
-/* =========================
-   INICIO
-========================= */
-
-window.onload = function(){
-
-narrador.play().catch(()=>{});
-
-animarEntrada();
-
-guardarInicioHistoria();
-
-};
-
-/* =========================
-   ANIMACIÓN
-========================= */
-
-function animarEntrada(){
-
-let video =
-document.getElementById("imagen");
-
-let texto =
-document.getElementById("cuento");
-
-video.classList.remove("animar");
-texto.classList.remove("animar");
-
-void video.offsetWidth;
-
-video.classList.add("animar");
-texto.classList.add("animar");
-
+    foods.slice(0,10).forEach(createFood(row1));
+    foods.slice(10,20).forEach(createFood(row2));
 }
 
-/* =========================
-   SIGUIENTE ESCENA
-========================= */
+function createFood(container){
+    return function(food){
+        let span = document.createElement("span");
+        span.classList.add("food");
+        span.draggable = true;
+        span.innerHTML = food;
+        span.id = "food" + Math.random();
 
-function siguiente(){
+        span.ondragstart = (e) => {
+            e.dataTransfer.setData("text", span.id);
+        };
 
-/* AUMENTAR PASO */
-
-paso++;
-
-/* SI YA TERMINÓ */
-
-if(paso >= historia.length){
-
-return;
-
+        container.appendChild(span);
+    }
 }
 
-/* TEXTO */
-
-const cuento =
-document.getElementById(
-"cuento"
-);
-
-cuento.innerText =
-historia[paso];
-
-/* VIDEO */
-
-const video =
-document.getElementById(
-"imagen"
-);
-
-/* DETENER */
-
-video.pause();
-
-/* CAMBIAR VIDEO */
-
-video.src =
-imagenes[paso];
-
-/* RECARGAR */
-
-video.load();
-
-/* REPRODUCIR */
-
-video.play().catch(()=>{});
-
-/* AUDIO */
-
-narrador.pause();
-
-narrador.currentTime = 0;
-
-narrador =
-new Audio(
-audios[paso]
-);
-
-narrador.play().catch(()=>{});
-
-/* ANIMACIÓN */
-
-animarEntrada();
-
-/* SUPABASE */
-
-guardarPasoHistoria(paso);
-
-/* ÚLTIMO PASO */
-
-if(paso === historia.length - 1){
-
-const boton =
-document.getElementById(
-"boton"
-);
-
-boton.innerHTML =
-"🎮 Ir a los Juegos";
-
+function allowDrop(ev){
+    ev.preventDefault();
 }
 
+function drop(ev){
+    ev.preventDefault();
+    let data = ev.dataTransfer.getData("text");
+    let element = document.getElementById(data);
+
+    document.getElementById("circle").appendChild(element);
+    selected.push(element.innerHTML);
 }
 
-/* =========================
-   IR A JUEGOS
-========================= */
+function checkPlate(){
+    let healthyCount = selected.filter(f => healthyFoods.includes(f)).length;
+    let total = selected.length;
 
-async function irAJuegos(){
+    let score = total === 0 ? 0 : Math.round((healthyCount / total) * 100);
 
-const nombre =
-localStorage.getItem(
-"nombreAlumno"
-);
+    let msg = "";
 
-const avatarUsuario =
-localStorage.getItem(
-"avatarSeleccionado"
-);
+    if(total === 0){
+        msg = "😅 No agregaste alimentos";
+    } else if(score >= 70){
+        msg = "🌟 ¡Muy saludable! " + score + "%";
+    } else if(score >= 40){
+        msg = "🙂 Regular " + score + "%";
+    } else {
+        msg = "🍔 Poco saludable " + score + "%";
+    }
 
-/* GUARDAR FINAL */
-
-await supabase
-.from("actividad")
-.insert([
-{
-nombre:nombre,
-avatar:avatarUsuario,
-seccion:"Historia",
-accion:"Terminó la historia"
-}
-]);
-
-window.location.href =
-"entradajuegos.html";
-
+    document.getElementById("result").innerText = msg;
 }
 
-/* =========================
-   GUARDAR INICIO
-========================= */
-
-async function guardarInicioHistoria(){
-
-const nombre =
-localStorage.getItem(
-"nombreAlumno"
-);
-
-const avatarUsuario =
-localStorage.getItem(
-"avatarSeleccionado"
-);
-
-const { error } =
-await supabase
-.from("actividad")
-.insert([
-{
-nombre:nombre,
-avatar:avatarUsuario,
-seccion:"Historia",
-accion:"Entró a la historia"
-}
-]);
-
-if(error){
-
-console.log(error);
-
+function resetGame(){
+    document.getElementById("circle").innerHTML = "Arrastra aquí tu comida";
+    document.getElementById("result").innerText = "";
+    loadFoods();
 }
 
-}
-
-/* =========================
-   GUARDAR AVANCE
-========================= */
-
-async function guardarPasoHistoria(numero){
-
-const nombre =
-localStorage.getItem(
-"nombreAlumno"
-);
-
-const avatarUsuario =
-localStorage.getItem(
-"avatarSeleccionado"
-);
-
-const { error } =
-await supabase
-.from("actividad")
-.insert([
-{
-nombre:nombre,
-avatar:avatarUsuario,
-seccion:"Historia",
-accion:
-"Avanzó al paso " + (numero + 1)
-}
-]);
-
-if(error){
-
-console.log(error);
-
-}
-
-}
-
-   /* =========================
-   BOTÓN
-========================= */
-
-const boton =
-document.getElementById(
-"boton"
-);
-
-boton.addEventListener(
-"click",
-() => {
-
-if(
-paso >= historia.length - 1
-){
-
-irAJuegos();
-
-}else{
-
-siguiente();
-
-}
-
-}
-);
-
+window.onload = loadFoods;
 </script>
 
 </body>
