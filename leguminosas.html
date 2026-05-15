@@ -16,8 +16,8 @@
 
 body{
     font-family:Arial,sans-serif;
-    overflow-x:hidden;
     min-height:100vh;
+    overflow:hidden;
 
     background:linear-gradient(135deg,#ede9fe,#c4b5fd);
 
@@ -26,177 +26,74 @@ body{
     align-items:center;
 
     position:relative;
-
-    overflow:hidden;
 }
 
-/* FONDO */
-
 /* =========================
-   FONDO ANIMADO
+   FONDO EMOJIS (ARREGLADO)
 ========================= */
 
 .fondo{
     position:fixed;
-    top:0;
-    left:0;
-
+    inset:0;
     width:100%;
     height:100%;
-
     overflow:hidden;
-
-    z-index:1;
-
+    z-index:0;
     pointer-events:none;
 }
 
 .emoji{
     position:absolute;
-
-    bottom:-100px;
-
-    opacity:0.22;
-
+    font-size:40px;
+    opacity:0.25;
     animation:flotar linear infinite;
-
-    filter:drop-shadow(0 0 10px rgba(255,255,255,0.4));
 }
 
 @keyframes flotar{
-
-    0%{
-        transform:
-        translateY(0)
-        rotate(0deg)
-        scale(0.7);
-
-        opacity:0;
+    from{
+        transform:translateY(110vh) rotate(0deg);
     }
-
-    10%{
-        opacity:0.25;
+    to{
+        transform:translateY(-120vh) rotate(360deg);
     }
-
-    50%{
-        transform:
-        translateY(-50vh)
-        rotate(180deg)
-        scale(1);
-    }
-
-    100%{
-        transform:
-        translateY(-130vh)
-        rotate(360deg)
-        scale(1.2);
-
-        opacity:0;
-    }
-
 }
-/* CONTENEDOR */
 
+/* CONTENEDOR */
 .contenedor{
     position:relative;
     z-index:2;
-
     width:95%;
     max-width:1200px;
-
     padding:30px;
-
-    animation:entrada 1s ease;
-}
-
-@keyframes entrada{
-
-    from{
-        opacity:0;
-        transform:translateY(50px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-
 }
 
 /* AVATAR */
-
 .avatarBox{
     position:absolute;
     top:20px;
     left:20px;
-
     background:white;
     padding:15px 20px;
-
     border-radius:20px;
-
     display:flex;
     align-items:center;
-    gap:12px;
-
     box-shadow:0 8px 20px rgba(0,0,0,0.15);
-
-    animation:avatarEntrada 1s ease;
-}
-
-@keyframes avatarEntrada{
-
-    from{
-        opacity:0;
-        transform:translateX(-40px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateX(0);
-    }
-
+    z-index:5;
 }
 
 .avatarEmoji{
     font-size:50px;
 }
 
-.avatarTexto{
-    font-size:20px;
-    font-weight:bold;
-    color:#5b21b6;
-}
-
 /* TITULO */
-
 h1{
     text-align:center;
     font-size:50px;
     color:#5b21b6;
-
-    margin-top:60px;
-    margin-bottom:50px;
-
-    animation:titulo 1s ease;
-}
-
-@keyframes titulo{
-
-    from{
-        opacity:0;
-        transform:scale(0.5);
-    }
-
-    to{
-        opacity:1;
-        transform:scale(1);
-    }
-
+    margin:60px 0 40px;
 }
 
 /* TARJETAS */
-
 .tarjetas{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
@@ -205,147 +102,54 @@ h1{
 
 .tarjeta{
     background:white;
-
     border-radius:30px;
-
     padding:35px;
-
     cursor:pointer;
-
-    transition:0.4s;
-
-    box-shadow:0 10px 25px rgba(0,0,0,0.15);
-
     text-align:center;
-
-    animation:tarjetaEntrada 1.2s ease;
-}
-
-@keyframes tarjetaEntrada{
-
-    from{
-        opacity:0;
-        transform:translateY(60px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    transition:0.3s;
 }
 
 .tarjeta:hover{
-    transform:scale(1.05) rotate(1deg);
-    background:#f5f3ff;
+    transform:scale(1.05);
 }
 
 .icono{
-    font-size:80px;
+    font-size:70px;
     margin-bottom:20px;
-
-    animation:rebote 2s infinite;
-}
-
-@keyframes rebote{
-
-    0%{
-        transform:translateY(0);
-    }
-
-    50%{
-        transform:translateY(-10px);
-    }
-
-    100%{
-        transform:translateY(0);
-    }
-
-}
-
-.tarjeta p{
-    font-size:24px;
-    line-height:1.6;
-    color:#4c1d95;
 }
 
 /* BOTONES */
-
 .botones{
-    margin-top:60px;
-
+    margin-top:50px;
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
     gap:20px;
 }
 
 button{
-    padding:20px;
-
+    padding:18px;
     border:none;
-    border-radius:25px;
-
-    font-size:20px;
+    border-radius:20px;
+    font-size:18px;
     font-weight:bold;
-
     cursor:pointer;
-
     color:white;
-
-    transition:0.3s;
-
-    box-shadow:0 8px 20px rgba(0,0,0,0.15);
 }
 
-button:hover{
-    transform:scale(1.08);
-}
+.verduras{background:#22c55e;}
+.cereales{background:#f59e0b;}
+.animal{background:#ef4444;}
 
-.menu{
-    background:#0ea5e9;
-}
-
-.verduras{
-    background:#22c55e;
-}
-
-.cereales{
-    background:#f59e0b;
-}
-
-.animal{
-    background:#ef4444;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:768px){
-
-    h1{
-        font-size:36px;
-    }
-
-    .tarjeta p{
-        font-size:20px;
-    }
-
-}
-
+/* fondo emojis correcto */
 </style>
 </head>
 
 <body>
 
-<!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<!-- AUDIO DE ENTRADA -->
+<!-- AUDIO -->
 <audio id="audioInicio" src="Seccionleguminosas.mp3"></audio>
-
-<!-- AUDIO TARJETA 1 -->
 <audio id="audio1" src="Leguminosas.mp3"></audio>
-
-<!-- AUDIO TARJETA 2 -->
 <audio id="audio2" src="Importancialeguminosas.mp3"></audio>
 
 <!-- FONDO -->
@@ -353,343 +157,133 @@ button:hover{
 
 <!-- AVATAR -->
 <div class="avatarBox">
-
-    <div class="avatarEmoji" id="avatar"></div>
-
-    
-
+    <div class="avatarEmoji" id="avatar">🙂</div>
 </div>
 
 <!-- CONTENIDO -->
 <div class="contenedor">
 
-    <h1>
-        🫘 Leguminosas 🫘
-    </h1>
+<h1>🫘 Leguminosas</h1>
 
-    <!-- TARJETAS -->
-    <div class="tarjetas">
+<div class="tarjetas">
 
-        <!-- TARJETA 1 -->
-        <div class="tarjeta"
-        onclick="reproducirAudio('audio1')">
+<div class="tarjeta" onclick="reproducirAudio('audio1')">
+    <div class="icono">🫘🌱🥣</div>
+    <p>Frijoles, lentejas, garbanzos...</p>
+</div>
 
-            <div class="icono">
-                🫘🥣🌱🍲
-            </div>
-
-            <p>
-                Incluyen frijoles,
-                lentejas, garbanzos
-                y habas.
-            </p>
-
-        </div>
-
-        <!-- TARJETA 2 -->
-        <div class="tarjeta"
-        onclick="reproducirAudio('audio2')">
-
-            <div class="icono">
-                💪🫘⚡🥗
-            </div>
-
-            <p>
-                Las leguminosas aportan
-                proteínas vegetales,
-                fibra y vitaminas para
-                tener siempre energía.
-            </p>
-
-        </div>
-
-    </div>
-
-    <!-- BOTONES -->
-    <div class="botones">
-      
-        <button class="verduras"
-        onclick="window.location.href='verdurasyfrutas.html'">
-            🥦 Verduras y Frutas
-        </button>
-
-        <button class="cereales"
-        onclick="window.location.href='cereales.html'">
-            🌾 Cereales
-        </button>
-
-        <button class="animal"
-        onclick="window.location.href='origenanimal.html'">
-            🍗 Origen Animal
-        </button>
-
-    </div>
+<div class="tarjeta" onclick="reproducirAudio('audio2')">
+    <div class="icono">💪⚡🥗</div>
+    <p>Aportan proteínas y energía.</p>
+</div>
 
 </div>
+
+<div class="botones">
+<button class="verduras">🥦 Verduras</button>
+<button class="cereales">🌾 Cereales</button>
+<button class="animal">🍗 Animal</button>
+</div>
+
+</div>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
 
 /* =========================
-   CONFIGURAR SUPABASE
+   SUPABASE
+========================= */
+const supabase = window.supabase.createClient(
+"https://jxdlneupjqlyxanydzdl.supabase.co",
+"sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV"
+);
+
+/* =========================
+   AUDIO FIX REAL
 ========================= */
 
-const _supabaseUrl =
-"https://jxdlneupjqlyxanydzdl.supabase.co";
+let audioDesbloqueado = false;
 
-const _supabaseKey =
-"sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
+function desbloquearAudio(){
+    audioDesbloqueado = true;
 
-const supabase =
-window.supabase.createClient(
-    _supabaseUrl,
-    _supabaseKey
-);
+    const a = document.getElementById("audioInicio");
+    a.play().catch(()=>{});
+}
+
+window.addEventListener("click", desbloquearAudio, { once:true });
+
+window.addEventListener("load", () => {
+
+    const audio = document.getElementById("audioInicio");
+
+    audio.play().catch(()=>{});
+
+    generarEmojis();
+    guardarVisita();
+
+});
+
+/* =========================
+   REPRODUCIR
+========================= */
+
+function reproducirAudio(id){
+
+    const audio = document.getElementById(id);
+    audio.currentTime = 0;
+
+    audio.play().catch(()=>{});
+
+}
 
 /* =========================
    AVATAR
 ========================= */
 
-const avatarGuardado =
-localStorage.getItem(
-"avatarSeleccionado"
-);
-
-const avatar =
-document.getElementById(
-"avatar"
-);
-
-if(avatarGuardado){
-
-    avatar.innerHTML =
-    avatarGuardado;
-
-}else{
-
-    avatar.innerHTML = "🙂";
-
-}
+document.getElementById("avatar").innerHTML =
+localStorage.getItem("avatarSeleccionado") || "🙂";
 
 /* =========================
-   DESBLOQUEAR AUDIO
+   EMOJIS (ARREGLADO)
 ========================= */
 
-let audioActivo = null;
+function generarEmojis(){
 
-function reproducir(audio){
+const fondo = document.getElementById("fondo");
 
-    /* PAUSAR AUDIO ANTERIOR */
+const emojis = ["🫘","🌱","🥣","🍲","💪","🥗","⚡","🌿"];
 
-    if(audioActivo){
+for(let i=0;i<50;i++){
 
-        audioActivo.pause();
+    const span = document.createElement("span");
+    span.className = "emoji";
+    span.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
 
-        audioActivo.currentTime = 0;
+    span.style.left = Math.random()*100 + "%";
+    span.style.fontSize = (20 + Math.random()*40) + "px";
+    span.style.animationDuration = (8 + Math.random()*10) + "s";
+    span.style.animationDelay = Math.random()*5 + "s";
 
-    }
-
-    audioActivo = audio;
-
-    audio.play()
-    .then(()=>{
-
-        console.log(
-        "Audio reproducido"
-        );
-
-    })
-    .catch(error=>{
-
-        console.log(
-        "Error de audio:",
-        error
-        );
-
-    });
-
-}
-
-/* =========================
-   AUDIO DE ENTRADA
-========================= */
-
-window.addEventListener(
-"load",
-() => {
-
-const audioInicio =
-document.getElementById(
-"audioInicio"
-);
-
-/* INTENTAR AUTOMÁTICO */
-
-reproducir(audioInicio);
-
-/* SI EL NAVEGADOR BLOQUEA */
-
-document.body.addEventListener(
-"click",
-() => {
-
-reproducir(audioInicio);
-
-},
-{ once:true }
-);
-
-guardarVisita();
-
-}
-);
-
-/* =========================
-   REPRODUCIR TARJETAS
-========================= */
-
-async function reproducirAudio(id){
-
-const audio =
-document.getElementById(id);
-
-audio.currentTime = 0;
-
-reproducir(audio);
-
-/* GUARDAR ACTIVIDAD */
-
-const nombre =
-localStorage.getItem(
-"nombreAlumno"
-);
-
-const avatarUsuario =
-localStorage.getItem(
-"avatarSeleccionado"
-);
-
-let descripcion = "";
-
-if(id === "audio1"){
-
-descripcion =
-"Escuchó información de leguminosas";
-
-}
-
-if(id === "audio2"){
-
-descripcion =
-"Escuchó importancia de leguminosas";
-
-}
-
-const { error } =
-await supabase
-.from("actividad")
-.insert([
-{
-nombre:nombre,
-avatar:avatarUsuario,
-seccion:"Leguminosas",
-accion:descripcion
-}
-]);
-
-if(error){
-
-console.log(error);
-
+    fondo.appendChild(span);
 }
 
 }
 
 /* =========================
-   GUARDAR VISITA
+   SUPABASE LOG
 ========================= */
 
 async function guardarVisita(){
 
-const nombre =
-localStorage.getItem(
-"nombreAlumno"
-);
-
-const avatarUsuario =
-localStorage.getItem(
-"avatarSeleccionado"
-);
-
-const { error } =
-await supabase
-.from("actividad")
-.insert([
-{
-nombre:nombre,
-avatar:avatarUsuario,
-seccion:"Leguminosas",
-accion:"Entró a la sección Leguminosas"
-}
-]);
-
-if(error){
-
-console.log(error);
-
-}
-
-}
-
-/* =========================
-   EMOJIS FLOTANTES
-========================= */
-
-const emojis = [
-
-"🫘","🌱","🥣","🍲",
-"💪","🥗","⚡","🌿",
-"🍛","🥬","🍽️","🫛",
-"🥜","🌰","🍵","🥘"
-
-];
-
-const fondo =
-document.getElementById(
-"fondo"
-);
-
-for(let i=0;i<60;i++){
-
-const span =
-document.createElement("span");
-
-span.classList.add(
-"emoji"
-);
-
-span.innerHTML =
-emojis[
-Math.floor(
-Math.random()*emojis.length
-)
-];
-
-span.style.left =
-Math.random()*100 + "%";
-
-span.style.fontSize =
-(25 + Math.random()*45)
-+ "px";
-
-span.style.animationDuration =
-(10 + Math.random()*15)
-+ "s";
-
-span.style.animationDelay =
-Math.random()*8
-+ "s";
-
-fondo.appendChild(span);
+await supabase.from("actividad").insert([{
+    nombre: localStorage.getItem("nombreAlumno"),
+    avatar: localStorage.getItem("avatarSeleccionado"),
+    seccion:"Leguminosas",
+    accion:"Entró"
+}]);
 
 }
 
