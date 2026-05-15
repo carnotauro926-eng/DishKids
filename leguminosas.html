@@ -220,27 +220,61 @@ button:hover{ transform:scale(1.08); }
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-/* AUDIO AUTOMÁTICO */
+/* =========================
+   CONFIGURACIÓN SUPABASE
+========================= */
+const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
+const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
+const supabaseClient = supabase.createClient(_supabaseUrl, _supabaseKey);
+
+async function registrarAvance() {
+    const nombre = localStorage.getItem("nombreAlumno");
+    if (!nombre) return;
+
+    // 1. Buscamos al alumno para obtener su ID
+    const { data: alumno } = await supabaseClient
+        .from('alumnos')
+        .select('id')
+        .eq('nombre_alumno', nombre)
+        .single();
+
+    if (alumno) {
+        // 2. Registramos progreso del 80%
+        await supabaseClient.from('progreso').upsert({
+            id_alumno: alumno.id,
+            archivo: "leguminosas.html",
+            porcentaje: 80,
+            completado: false,
+            fecha: new Date().toISOString()
+        }, { onConflict: 'id_alumno, archivo' });
+    }
+}
+
+/* =========================
+   LÓGICA DE LA PÁGINA
+========================= */
 window.onload = function(){
+    registrarAvance(); // Registrar progreso al iniciar
+
     const audio = document.getElementById("audioInicio");
     audio.play().catch(()=>{});
     crearEmojis();
+
+    // Cargar Avatar
+    const avatarGuardado = localStorage.getItem("avatarSeleccionado") || localStorage.getItem("avatarElegido");
+    const avatar = document.getElementById("avatar");
+    avatar.innerHTML = avatarGuardado ? avatarGuardado : "🙂";
 };
 
-/* AVATAR DINÁMICO */
-const avatarGuardado = localStorage.getItem("avatarSeleccionado") || localStorage.getItem("avatarElegido");
-const avatar = document.getElementById("avatar");
-avatar.innerHTML = avatarGuardado ? avatarGuardado : "🙂";
-
-/* REPRODUCIR AUDIOS */
 function reproducirAudio(id){
     const audio = document.getElementById(id);
     audio.currentTime = 0;
     audio.play();
 }
 
-/* EMOJIS FLOTANTES ADAPTADOS */
 function crearEmojis(){
     const emojis = ["🫘","🌱","🍲","🥗","🌿","💪"];
     const fondo = document.getElementById("fondo");
