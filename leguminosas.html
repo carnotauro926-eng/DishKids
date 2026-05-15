@@ -3,145 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>DishKids</title>
 
 <style>
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
 body{
-    font-family:Arial,sans-serif;
-    min-height:100vh;
-    overflow:hidden;
-
-    background:linear-gradient(135deg,#ede9fe,#c4b5fd);
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    position:relative;
-}
-
-/* =========================
-   FONDO EMOJIS (ARREGLADO)
-========================= */
-
-.fondo{
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    z-index:0;
-    pointer-events:none;
-}
-
-.emoji{
-    position:absolute;
-    font-size:40px;
-    opacity:0.25;
-    animation:flotar linear infinite;
-}
-
-@keyframes flotar{
-    from{
-        transform:translateY(110vh) rotate(0deg);
-    }
-    to{
-        transform:translateY(-120vh) rotate(360deg);
-    }
-}
-
-/* CONTENEDOR */
-.contenedor{
-    position:relative;
-    z-index:2;
-    width:95%;
-    max-width:1200px;
-    padding:30px;
+font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background:linear-gradient(135deg,#f5f0e9,#ebe3d5);
+min-height:100vh;
+margin:0;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+position:relative;
 }
 
 /* AVATAR */
-.avatarBox{
-    position:absolute;
-    top:20px;
-    left:20px;
-    background:white;
-    padding:15px 20px;
-    border-radius:20px;
-    display:flex;
-    align-items:center;
-    box-shadow:0 8px 20px rgba(0,0,0,0.15);
-    z-index:5;
+.avatar-esquina{
+position:fixed;
+top:15px;
+right:15px;
+font-size:50px;
+background:white;
+border-radius:50%;
+padding:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+z-index:9999;
 }
 
-.avatarEmoji{
-    font-size:50px;
+/* CONTENIDO */
+.content-wrapper{
+position:relative;
+z-index:10;
+text-align:center;
+max-width:1200px;
+width:100%;
 }
 
-/* TITULO */
 h1{
-    text-align:center;
-    font-size:50px;
-    color:#5b21b6;
-    margin:60px 0 40px;
+font-family:'Comic Sans MS', cursive;
+color:#b45f06;
+margin:40px 0;
+font-size:3rem;
 }
 
-/* TARJETAS */
-.tarjetas{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:30px;
+/* CARDS */
+.container{
+display:flex;
+flex-wrap:wrap;
+gap:40px;
+justify-content:center;
 }
 
-.tarjeta{
-    background:white;
-    border-radius:30px;
-    padding:35px;
-    cursor:pointer;
-    text-align:center;
-    box-shadow:0 10px 25px rgba(0,0,0,0.15);
-    transition:0.3s;
+.card{
+width:420px;
+background:white;
+border-radius:20px;
+box-shadow:0 12px 35px rgba(0,0,0,0.12);
+overflow:hidden;
+cursor:pointer;
+transition:0.4s;
 }
 
-.tarjeta:hover{
-    transform:scale(1.05);
+.card:hover{
+transform:translateY(-10px) scale(1.03);
 }
 
-.icono{
-    font-size:70px;
-    margin-bottom:20px;
+.card-header{
+background:#f6b26b;
+color:#6b3e00;
+padding:20px;
+font-size:1.8rem;
+font-weight:bold;
+}
+
+.card-body{
+padding:25px;
+font-size:1.2rem;
+line-height:1.6;
+color:#333;
 }
 
 /* BOTONES */
-.botones{
-    margin-top:50px;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
+.nav-buttons{
+margin-top:40px;
+display:flex;
+gap:20px;
+justify-content:center;
+flex-wrap:wrap;
 }
 
-button{
-    padding:18px;
-    border:none;
-    border-radius:20px;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
-    color:white;
+.nav-buttons a{
+text-decoration:none;
+padding:14px 22px;
+border-radius:12px;
+font-weight:bold;
+color:white;
 }
 
-.verduras{background:#22c55e;}
-.cereales{background:#f59e0b;}
-.animal{background:#ef4444;}
+.btn-verdes{background:#6ab04c;}
+.btn-cereales{background:#f6d365;color:#5a4b00;}
+.btn-animal{background:#ffd6c9;color:#7a3a2f;}
 
-/* fondo emojis correcto */
+/* EMOJIS */
+.emoji-float{
+position:absolute;
+font-size:2.5rem;
+pointer-events:none;
+animation:float 18s linear infinite;
+opacity:0;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);opacity:0}
+10%{opacity:.7}
+50%{opacity:1}
+100%{transform:translateY(-120vh);opacity:0}
+}
+
 </style>
 </head>
 
@@ -152,140 +132,99 @@ button{
 <audio id="audio1" src="Leguminosas.mp3"></audio>
 <audio id="audio2" src="Importancialeguminosas.mp3"></audio>
 
-<!-- FONDO -->
-<div class="fondo" id="fondo"></div>
-
 <!-- AVATAR -->
-<div class="avatarBox">
-    <div class="avatarEmoji" id="avatar">🙂</div>
+<div class="avatar-esquina" id="avatar">🙂</div>
+
+<div class="content-wrapper">
+
+<h1>¡Consume leguminosas!</h1>
+
+<div class="container">
+
+<div class="card" onclick="reproducir('audio1')">
+<div class="card-header">Leguminosas</div>
+<div class="card-body">
+Frijoles, lentejas, garbanzos y habas.
+</div>
 </div>
 
-<!-- CONTENIDO -->
-<div class="contenedor">
-
-<h1>🫘 Leguminosas</h1>
-
-<div class="tarjetas">
-
-<div class="tarjeta" onclick="reproducirAudio('audio1')">
-    <div class="icono">🫘🌱🥣</div>
-    <p>Frijoles, lentejas, garbanzos...</p>
+<div class="card" onclick="reproducir('audio2')">
+<div class="card-header">Importancia</div>
+<div class="card-body">
+Aportan proteínas vegetales, fibra y energía.
 </div>
-
-<div class="tarjeta" onclick="reproducirAudio('audio2')">
-    <div class="icono">💪⚡🥗</div>
-    <p>Aportan proteínas y energía.</p>
-</div>
-
-</div>
-
-<div class="botones">
-<button class="verduras">🥦 Verduras</button>
-<button class="cereales">🌾 Cereales</button>
-<button class="animal">🍗 Animal</button>
 </div>
 
 </div>
 
-<!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<div class="nav-buttons">
+<a class="btn-verdes" href="verdurasyfrutas.html">Verduras</a>
+<a class="btn-cereales" href="cereales.html">Cereales</a>
+<a class="btn-animal" href="origenanimal.html">Origen Animal</a>
+</div>
+
+</div>
 
 <script>
 
 /* =========================
-   SUPABASE
-========================= */
-const supabase = window.supabase.createClient(
-"https://jxdlneupjqlyxanydzdl.supabase.co",
-"sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV"
-);
-
-/* =========================
-   AUDIO FIX REAL
+   AUDIO FIX REAL (IMPORTANTE)
 ========================= */
 
-let audioDesbloqueado = false;
+let unlocked = false;
 
-function desbloquearAudio(){
-    audioDesbloqueado = true;
-
-    const a = document.getElementById("audioInicio");
-    a.play().catch(()=>{});
+function unlockAudio(){
+unlocked = true;
+document.getElementById("audioInicio").play().catch(()=>{});
 }
 
-window.addEventListener("click", desbloquearAudio, { once:true });
+window.addEventListener("click", unlockAudio, { once:true });
 
-window.addEventListener("load", () => {
-
-    const audio = document.getElementById("audioInicio");
-
-    audio.play().catch(()=>{});
-
-    generarEmojis();
-    guardarVisita();
-
-});
+window.onload = () => {
+document.getElementById("audioInicio").play().catch(()=>{});
+crearEmojis();
+};
 
 /* =========================
-   REPRODUCIR
+   REPRODUCIR AUDIOS
 ========================= */
 
-function reproducirAudio(id){
+function reproducir(id){
+const audio = document.getElementById(id);
+audio.currentTime = 0;
+audio.play().catch(()=>{});
+}
 
-    const audio = document.getElementById(id);
-    audio.currentTime = 0;
+/* =========================
+   EMOJIS (ESTILO TU BUENO)
+========================= */
 
-    audio.play().catch(()=>{});
+function crearEmojis(){
 
+const emojis = ["🫘","🌱","🥗","🍲","💪","⚡","🌿"];
+
+for(let i=0;i<40;i++){
+
+const e = document.createElement("div");
+e.className="emoji-float";
+e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+
+e.style.left = Math.random()*100+"vw";
+e.style.fontSize = (1.5 + Math.random()*1.5)+"rem";
+e.style.animationDuration = (12 + Math.random()*10)+"s";
+e.style.animationDelay = Math.random()*5+"s";
+
+document.body.appendChild(e);
+
+}
 }
 
 /* =========================
    AVATAR
 ========================= */
 
-document.getElementById("avatar").innerHTML =
-localStorage.getItem("avatarSeleccionado") || "🙂";
-
-/* =========================
-   EMOJIS (ARREGLADO)
-========================= */
-
-function generarEmojis(){
-
-const fondo = document.getElementById("fondo");
-
-const emojis = ["🫘","🌱","🥣","🍲","💪","🥗","⚡","🌿"];
-
-for(let i=0;i<50;i++){
-
-    const span = document.createElement("span");
-    span.className = "emoji";
-    span.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
-
-    span.style.left = Math.random()*100 + "%";
-    span.style.fontSize = (20 + Math.random()*40) + "px";
-    span.style.animationDuration = (8 + Math.random()*10) + "s";
-    span.style.animationDelay = Math.random()*5 + "s";
-
-    fondo.appendChild(span);
-}
-
-}
-
-/* =========================
-   SUPABASE LOG
-========================= */
-
-async function guardarVisita(){
-
-await supabase.from("actividad").insert([{
-    nombre: localStorage.getItem("nombreAlumno"),
-    avatar: localStorage.getItem("avatarSeleccionado"),
-    seccion:"Leguminosas",
-    accion:"Entró"
-}]);
-
-}
+document.getElementById("avatar").innerText =
+localStorage.getItem("avatarElegido") || "🙂";
 
 </script>
 
