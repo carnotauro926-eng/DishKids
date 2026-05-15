@@ -433,8 +433,11 @@ button:hover{
    CONFIGURAR SUPABASE
 ========================= */
 
-const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
-const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV"
+const _supabaseUrl =
+"https://jxdlneupjqlyxanydzdl.supabase.co";
+
+const _supabaseKey =
+"sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
 
 const supabase =
 window.supabase.createClient(
@@ -443,58 +446,23 @@ window.supabase.createClient(
 );
 
 /* =========================
-   AUDIO AUTOMÁTICO
-========================= */
-
-/* =========================
-   AUDIO DE ENTRADA
-========================= */
-
-window.addEventListener("load", () => {
-
-    const audio =
-    document.getElementById("audioInicio");
-
-    audio.volume = 1;
-
-    /* INTENTAR REPRODUCIR */
-
-    audio.play().catch(() => {
-
-        console.log(
-        "Autoplay bloqueado"
-        );
-
-        /* SE REPRODUCE AL PRIMER CLICK */
-
-        document.body.addEventListener(
-        "click",
-        () => {
-
-            audio.play();
-
-        },
-        { once:true });
-
-    });
-
-    guardarVisita();
-
-});
-
-/* =========================
    AVATAR
 ========================= */
 
 const avatarGuardado =
-localStorage.getItem("avatarSeleccionado");
+localStorage.getItem(
+"avatarSeleccionado"
+);
 
 const avatar =
-document.getElementById("avatar");
+document.getElementById(
+"avatar"
+);
 
 if(avatarGuardado){
 
-    avatar.innerHTML = avatarGuardado;
+    avatar.innerHTML =
+    avatarGuardado;
 
 }else{
 
@@ -503,57 +471,136 @@ if(avatarGuardado){
 }
 
 /* =========================
-   REPRODUCIR AUDIOS
+   DESBLOQUEAR AUDIO
+========================= */
+
+let audioActivo = null;
+
+function reproducir(audio){
+
+    /* PAUSAR AUDIO ANTERIOR */
+
+    if(audioActivo){
+
+        audioActivo.pause();
+
+        audioActivo.currentTime = 0;
+
+    }
+
+    audioActivo = audio;
+
+    audio.play()
+    .then(()=>{
+
+        console.log(
+        "Audio reproducido"
+        );
+
+    })
+    .catch(error=>{
+
+        console.log(
+        "Error de audio:",
+        error
+        );
+
+    });
+
+}
+
+/* =========================
+   AUDIO DE ENTRADA
+========================= */
+
+window.addEventListener(
+"load",
+() => {
+
+const audioInicio =
+document.getElementById(
+"audioInicio"
+);
+
+/* INTENTAR AUTOMÁTICO */
+
+reproducir(audioInicio);
+
+/* SI EL NAVEGADOR BLOQUEA */
+
+document.body.addEventListener(
+"click",
+() => {
+
+reproducir(audioInicio);
+
+},
+{ once:true }
+);
+
+guardarVisita();
+
+}
+);
+
+/* =========================
+   REPRODUCIR TARJETAS
 ========================= */
 
 async function reproducirAudio(id){
 
-    const audio =
-    document.getElementById(id);
+const audio =
+document.getElementById(id);
 
-    audio.currentTime = 0;
+audio.currentTime = 0;
 
-    audio.play();
+reproducir(audio);
 
-    const nombre =
-    localStorage.getItem("nombreAlumno");
+/* GUARDAR ACTIVIDAD */
 
-    const avatarUsuario =
-    localStorage.getItem("avatarSeleccionado");
+const nombre =
+localStorage.getItem(
+"nombreAlumno"
+);
 
-    let descripcion = "";
+const avatarUsuario =
+localStorage.getItem(
+"avatarSeleccionado"
+);
 
-    if(id === "audio1"){
+let descripcion = "";
 
-        descripcion =
-        "Escuchó información de leguminosas";
+if(id === "audio1"){
 
-    }
+descripcion =
+"Escuchó información de leguminosas";
 
-    if(id === "audio2"){
+}
 
-        descripcion =
-        "Escuchó importancia de leguminosas";
+if(id === "audio2"){
 
-    }
+descripcion =
+"Escuchó importancia de leguminosas";
 
-    const { error } =
-    await supabase
-    .from("actividad")
-    .insert([
-        {
-            nombre:nombre,
-            avatar:avatarUsuario,
-            seccion:"Leguminosas",
-            accion:descripcion
-        }
-    ]);
+}
 
-    if(error){
+const { error } =
+await supabase
+.from("actividad")
+.insert([
+{
+nombre:nombre,
+avatar:avatarUsuario,
+seccion:"Leguminosas",
+accion:descripcion
+}
+]);
 
-        console.log(error);
+if(error){
 
-    }
+console.log(error);
+
+}
 
 }
 
@@ -563,29 +610,33 @@ async function reproducirAudio(id){
 
 async function guardarVisita(){
 
-    const nombre =
-    localStorage.getItem("nombreAlumno");
+const nombre =
+localStorage.getItem(
+"nombreAlumno"
+);
 
-    const avatarUsuario =
-    localStorage.getItem("avatarSeleccionado");
+const avatarUsuario =
+localStorage.getItem(
+"avatarSeleccionado"
+);
 
-    const { error } =
-    await supabase
-    .from("actividad")
-    .insert([
-        {
-            nombre:nombre,
-            avatar:avatarUsuario,
-            seccion:"Leguminosas",
-            accion:"Entró a la sección Leguminosas"
-        }
-    ]);
+const { error } =
+await supabase
+.from("actividad")
+.insert([
+{
+nombre:nombre,
+avatar:avatarUsuario,
+seccion:"Leguminosas",
+accion:"Entró a la sección Leguminosas"
+}
+]);
 
-    if(error){
+if(error){
 
-        console.log(error);
+console.log(error);
 
-    }
+}
 
 }
 
@@ -593,47 +644,52 @@ async function guardarVisita(){
    EMOJIS FLOTANTES
 ========================= */
 
-/* =========================
-   EMOJIS FLOTANTES
-========================= */
-
 const emojis = [
+
 "🫘","🌱","🥣","🍲",
 "💪","🥗","⚡","🌿",
 "🍛","🥬","🍽️","🫛",
 "🥜","🌰","🍵","🥘"
+
 ];
 
 const fondo =
-document.getElementById("fondo");
+document.getElementById(
+"fondo"
+);
 
-for(let i=0;i<55;i++){
+for(let i=0;i<60;i++){
 
-    const span =
-    document.createElement("span");
+const span =
+document.createElement("span");
 
-    span.classList.add("emoji");
+span.classList.add(
+"emoji"
+);
 
-    span.innerHTML =
-    emojis[
-        Math.floor(
-            Math.random()*emojis.length
-        )
-    ];
+span.innerHTML =
+emojis[
+Math.floor(
+Math.random()*emojis.length
+)
+];
 
-    span.style.left =
-    Math.random()*100 + "%";
+span.style.left =
+Math.random()*100 + "%";
 
-    span.style.fontSize =
-    (25 + Math.random()*45) + "px";
+span.style.fontSize =
+(25 + Math.random()*45)
++ "px";
 
-    span.style.animationDuration =
-    (10 + Math.random()*15) + "s";
+span.style.animationDuration =
+(10 + Math.random()*15)
++ "s";
 
-    span.style.animationDelay =
-    Math.random()*8 + "s";
+span.style.animationDelay =
+Math.random()*8
++ "s";
 
-    fondo.appendChild(span);
+fondo.appendChild(span);
 
 }
 
