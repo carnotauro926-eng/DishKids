@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso por Perfil</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Comic Sans MS', cursive;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#e8d5c4;
+    overflow:hidden;
+}
+
+.contenedor{
+    width:90%;
+    max-width:1300px;
+    background:#f8f1e7;
+    border-radius:25px;
+    padding:50px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.12);
+    text-align:center;
+    position:relative;
+}
+
+.titulo{
+    margin-bottom:50px;
+}
+
+.titulo span{
+    display:inline-block;
+    font-size:40px;
+    font-weight:bold;
+    color:#2f2f2f;
+    animation:flotar 2s infinite ease-in-out;
+}
+
+@keyframes flotar{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-10px); }
+}
+
+.tarjetas{
+    display:flex;
+    justify-content:center;
+    gap:60px;
+    flex-wrap:wrap;
+}
+
+.card{
+    width:420px;
+    background:white;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.card img{
+    width:100%;
+    height:280px;
+    object-fit:cover;
+}
+
+.card h2{
+    margin-top:25px;
+    font-size:42px;
+    color:#2f2f2f;
+    font-weight:bold;
+}
+
+.card p{
+    font-size:24px;
+    color:#444;
+    padding:20px 35px;
+    line-height:1.5;
+}
+
+button{
+    margin:20px 0 35px;
+    padding:18px 45px;
+    border:none;
+    border-radius:18px;
+    font-size:24px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+    color:white;
+}
+
+.maestro button{
+    background:#3d6dd8;
+}
+
+.alumno button{
+    background:#7a56d8;
+}
+
+button:hover{
+    transform:scale(1.06);
+    opacity:0.92;
+}
+
+</style>
+</head>
+<body>
+
+<div class="contenedor">
+
+    <div class="titulo">
+        <span>¿</span><span>C</span><span>Ó</span><span>M</span><span>O</span><span>&nbsp;</span>
+        <span>D</span><span>E</span><span>S</span><span>E</span><span>A</span><span>S</span><span>&nbsp;</span>
+        <span>A</span><span>C</span><span>C</span><span>E</span><span>D</span><span>E</span><span>R</span><span>?</span>
+    </div>
+
+    <div class="tarjetas">
+
+        <div class="card maestro">
+            <img src="maestro.png" alt="Maestro">
+
+            <h2>Soy maestro</h2>
+
+            <!-- AQUÍ SE CONECTA A maestro.html -->
+            <button onclick="window.location.href='maestro.html'">
+                Ingresar como maestro
+            </button>
+        </div>
+
+        <div class="card alumno">
+            <img src="alumno.png" alt="Alumno">
+
+            <h2>Soy alumno</h2>
+
+            <button onclick="window.location.href='loginalumno.html'">
+                Ingresar como alumno
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Maestro</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
+    body{ background:#f5f7fb; min-height:100vh; display:flex; justify-content:center; align-items:center; padding:20px; }
+    .contenedor{ width:100%; max-width:800px; background:#ffffff; border-radius:20px; padding:35px; box-shadow:0 10px 30px rgba(0,0,0,0.08); }
+    h1{ text-align:center; margin-bottom:30px; color:#1f2937; }
+    .nota{ background:#fff7cc; border:1px solid #facc15; padding:15px; border-radius:12px; margin-bottom:25px; font-size:15px; color:#92400e; text-align:center; font-weight:bold; line-height:1.5; }
+    .grupo{ margin-bottom:20px; }
+    label{ display:block; margin-bottom:8px; font-weight:bold; color:#374151; }
+    input{ width:100%; padding:14px; border:1px solid #d1d5db; border-radius:12px; font-size:16px; outline:none; }
+    button{ width:100%; padding:14px; margin-top:15px; border:none; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; transition:0.3s; }
+    .btn-principal{ background:#2563eb; color:white; }
+    .btn-principal:hover{ background:#1d4ed8; }
+    .btn-registro{ background:#10b981; color:white; }
+    .btn-registro:hover{ background:#059669; }
+    .volver{ background:#4b5563; color:white; }
+    .volver:hover{ background:#374151; }
+    .oculto{ display:none; }
+
+    /* Panel de alumnos */
+    .tabla-alumnos{ width:100%; border-collapse:collapse; margin-top:20px; }
+    .tabla-alumnos th{ background:#2563eb; color:white; padding:12px; text-align:left; font-size:14px; }
+    .tabla-alumnos td{ padding:12px; border-bottom:1px solid #e5e7eb; font-size:14px; color:#374151; }
+    .tabla-alumnos tr:hover td{ background:#eff6ff; }
+    .barra-mini-cont{ background:#e5e7eb; border-radius:10px; height:14px; overflow:hidden; }
+    .barra-mini{ height:100%; background:linear-gradient(90deg,#10b981,#059669); border-radius:10px; transition:0.5s; }
+    .badge{ display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:bold; }
+    .badge-ok{ background:#d1fae5; color:#065f46; }
+    .badge-no{ background:#fee2e2; color:#991b1b; }
+    .score-box{ margin-top:20px; padding:18px; border-radius:14px; background:#eff6ff; border:1px solid #bfdbfe; font-size:16px; color:#1d4ed8; font-weight:bold; }
+    .btn-refrescar{ background:#7c3aed; color:white; }
+    .btn-refrescar:hover{ background:#6d28d9; }
+    .buscador{ margin-bottom:15px; }
+    .tabs{ display:flex; gap:10px; margin-bottom:20px; }
+    .tab{ flex:1; padding:10px; border:none; border-radius:10px; cursor:pointer; font-size:14px; font-weight:bold; background:#e5e7eb; color:#374151; transition:0.3s; }
+    .tab.activo{ background:#2563eb; color:white; }
+    #resumenProgreso{ background:#f0fdf4; border:1px solid #86efac; border-radius:12px; padding:15px; margin-top:15px; font-size:14px; line-height:1.8; }
+  </style>
+</head>
+<body>
+
+  <audio id="audioInicio" src="panelmaestro.mp3"></audio>
+
+  <div class="contenedor">
+
+    <!-- LOGIN DEL MAESTRO -->
+    <div id="loginMaestro">
+      <h1>Acceso Maestro</h1>
+      <div class="nota">
+        NOTA: Si es su primera vez accediendo, ingrese su nombre y contraseña y haga clic en "Registrarse"
+      </div>
+      <div class="grupo">
+        <label>Nombre del maestro</label>
+        <input type="text" id="nombreMaestro" placeholder="Escribe tu nombre">
+      </div>
+      <div class="grupo">
+        <label>Contraseña</label>
+        <input type="password" id="passwordMaestro" placeholder="Escribe tu contraseña">
+      </div>
+      <button class="btn-principal" onclick="iniciarSesionConRefresh()">Iniciar sesión</button>
+      <button class="btn-registro" onclick="registrarMaestro()">Registrarse</button>
+      <button class="volver" onclick="window.location.href='index.html'">Volver</button>
+      <div id="msgLogin" style="margin-top:12px;color:#c0392b;text-align:center;font-size:15px;"></div>
+    </div>
+
+    <!-- PANEL MAESTRO -->
+    <div id="panelScore" class="oculto">
+      <h1>📊 Panel del Maestro</h1>
+
+      <div class="tabs">
+        <button class="tab activo" onclick="mostrarTab('tabTodos')">Todos los alumnos</button>
+        <button class="tab" onclick="mostrarTab('tabBuscar')">Buscar alumno</button>
+      </div>
+
+      <!-- TAB: TODOS LOS ALUMNOS -->
+      <div id="tabTodos">
+        <button class="btn-refrescar" onclick="cargarTodosAlumnos()">🔄 Refrescar lista</button>
+        <div id="listaAlumnos">
+          <p style="text-align:center;color:#6b7280;margin-top:20px;">Cargando alumnos...</p>
+        </div>
+      </div>
+
+      <!-- TAB: BUSCAR ALUMNO -->
+      <div id="tabBuscar" class="oculto">
+        <div class="grupo buscador">
+          <label>Nombre del alumno</label>
+          <input type="text" id="nombreAlumno" placeholder="Escribe el nombre del alumno">
+        </div>
+        <button class="btn-principal" onclick="verProgresoAlumno()">Ver Progreso</button>
+        <div class="score-box" id="resultado">Aquí aparecerá el progreso del alumno</div>
+      </div>
+
+      <button class="volver" style="margin-top:20px;" onclick="window.location.href='index.html'">Volver al inicio</button>
+    </div>
+
+  </div>
+
+<script>
+
+  /* INICIALIZAR SUPABASE */
+  const supabaseUrl = 'https://jxdlneupjqlyxanydzdl.supabase.co';
+  const supabaseKey = 'sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV';
+  const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+  window.onload = function(){
+    document.getElementById("audioInicio").play().catch(()=>{});
+  };
+
+  /* TABS */
+  function mostrarTab(id){
+    document.getElementById('tabTodos').classList.add('oculto');
+    document.getElementById('tabBuscar').classList.add('oculto');
+    document.getElementById(id).classList.remove('oculto');
+    document.querySelectorAll('.tab').forEach((t,i)=>{
+      t.classList.toggle('activo', (i===0 && id==='tabTodos') || (i===1 && id==='tabBuscar'));
+    });
+    if(id === 'tabTodos') cargarTodosAlumnos();
+  }
+
+  /* REGISTRAR MAESTRO */
+  async function registrarMaestro(){
+    const nombre = document.getElementById("nombreMaestro").value.trim();
+    const password = document.getElementById("passwordMaestro").value.trim();
+    const msg = document.getElementById("msgLogin");
+    if(!nombre || !password){ msg.textContent="Completa todos los campos"; return; }
+
+    const { error } = await supabaseClient
+      .from('maestros')
+      .insert([{ nombre: nombre, password: password }]);
+
+    if(error){ msg.textContent = "Error: " + error.message; }
+    else { msg.style.color="#065f46"; msg.textContent = "✅ Maestro registrado correctamente. Ahora inicia sesión."; }
+  }
+
+  /* LOGIN DEL MAESTRO */
+  async function iniciarSesion(){
+    const nombre = document.getElementById("nombreMaestro").value.trim();
+    const password = document.getElementById("passwordMaestro").value.trim();
+    const msg = document.getElementById("msgLogin");
+    if(!nombre || !password){ msg.textContent="Completa todos los campos"; return; }
+
+    const { data, error } = await supabaseClient
+      .from('maestros')
+      .select('*')
+      .eq('nombre', nombre)
+      .eq('password', password)
+      .single();
+
+    if(error || !data){
+      msg.textContent = "❌ Nombre o contraseña incorrectos";
+    } else {
+      document.getElementById("loginMaestro").classList.add("oculto");
+      document.getElementById("panelScore").classList.remove("oculto");
+      cargarTodosAlumnos();
+    }
+  }
+
+  /* NOMBRES DE ARCHIVOS/SECCIONES LEGIBLES */
+  const nombreArchivo = {
+    "eo.html": "Plato del Bien Comer",
+    "verdurasyfrutas.html": "Verduras y Frutas",
+    "cereales.html": "Cereales",
+    "leguminosas.html": "Leguminosas",
+    "origenanimal.html": "Origen Animal",
+    "historia.html": "Historia",
+    "entradajuegos.html": "Zona de Juegos",
+    "multimedia.html": "Área de Canciones",
+    "musica.html": "Música"
+  };
+
+  /* CARGAR TODOS LOS ALUMNOS */
+  async function cargarTodosAlumnos(){
+    const contenedor = document.getElementById("listaAlumnos");
+    contenedor.innerHTML = '<p style="text-align:center;color:#6b7280;margin-top:20px;">Cargando...</p>';
+
+    // Obtener todos los alumnos
+    const { data: alumnos, error: errAlumnos } = await supabaseClient
+      .from('alumnos')
+      .select('id, nombre_alumno')
+      .order('id');
+
+    if(errAlumnos || !alumnos || alumnos.length === 0){
+      contenedor.innerHTML = '<p style="text-align:center;color:#6b7280;margin-top:20px;">No hay alumnos registrados aún.</p>';
+      return;
+    }
+
+    // Obtener todo el progreso
+    const { data: progresos } = await supabaseClient
+      .from('progreso')
+      .select('*');
+
+    // Construir tabla
+    let html = '<table class="tabla-alumnos"><thead><tr><th>Alumno</th><th>Secciones visitadas</th><th>Progreso</th><th>Completados</th></tr></thead><tbody>';
+
+    alumnos.forEach(alumno => {
+      const progAlumno = (progresos || []).filter(p => p.id_alumno === alumno.id);
+      const totalSecciones = Object.keys(nombreArchivo).length;
+      const visitadas = progAlumno.length;
+      const completadas = progAlumno.filter(p => p.completado).length;
+      const porcentaje = Math.min(Math.round((visitadas / totalSecciones) * 100), 100);
+
+      // Lista de secciones visitadas
+      const seccionesVisitadas = progAlumno.map(p => nombreArchivo[p.archivo] || p.archivo).join(', ') || 'Ninguna';
+
+      html += `
+        <tr>
+          <td><strong>${alumno.nombre_alumno}</strong></td>
+          <td style="max-width:200px;font-size:12px;">${seccionesVisitadas}</td>
+          <td style="min-width:120px;">
+            <div class="barra-mini-cont">
+              <div class="barra-mini" style="width:${porcentaje}%"></div>
+            </div>
+            <span style="font-size:12px;color:#6b7280;">${porcentaje}% (${visitadas}/${totalSecciones})</span>
+          </td>
+          <td><span class="badge ${completadas>0?'badge-ok':'badge-no'}">${completadas} ✓</span></td>
+        </tr>`;
+    });
+
+    html += '</tbody></table>';
+    contenedor.innerHTML = html;
+  }
+
+  /* VER PROGRESO DE UN ALUMNO ESPECÍFICO */
+  async function verProgresoAlumno(){
+    const nombreAlumno = document.getElementById("nombreAlumno").value.trim();
+    const resultado = document.getElementById("resultado");
+
+    if(!nombreAlumno){ resultado.innerHTML = "Escribe el nombre del alumno"; return; }
+    resultado.innerHTML = "Buscando...";
+
+    // Buscar alumno
+    const { data: alumnos, error: errAlumno } = await supabaseClient
+      .from('alumnos')
+      .select('id, nombre_alumno')
+      .eq('nombre_alumno', nombreAlumno);
+
+    if(errAlumno || !alumnos || alumnos.length === 0){
+      resultado.innerHTML = "❌ Alumno no encontrado";
+      return;
+    }
+
+    const alumno = alumnos[0];
+
+    // Buscar progreso
+    const { data: progresos, error: errProg } = await supabaseClient
+      .from('progreso')
+      .select('*')
+      .eq('id_alumno', alumno.id);
+
+    if(errProg){ resultado.innerHTML = "Error al cargar progreso"; return; }
+
+    const totalSecciones = Object.keys(nombreArchivo).length;
+    const visitadas = (progresos || []).length;
+    const completadas = (progresos || []).filter(p => p.completado).length;
+    const porcentaje = Math.min(Math.round((visitadas / totalSecciones) * 100), 100);
+
+    let seccionesDetalle = '';
+    if(progresos && progresos.length > 0){
+      seccionesDetalle = progresos.map(p => {
+        const n = nombreArchivo[p.archivo] || p.archivo;
+        return `<li>${n}: ${p.completado ? '✅ Completado' : '⏳ En progreso'} (${p.porcentaje || 0}%)</li>`;
+      }).join('');
+    }
+
+    resultado.innerHTML = `
+      <strong>👤 ${alumno.nombre_alumno}</strong><br><br>
+      <strong>Progreso general:</strong> ${porcentaje}% (${visitadas} de ${totalSecciones} secciones)<br>
+      <strong>Secciones completadas:</strong> ${completadas}<br><br>
+      <strong>Detalle:</strong>
+      <ul style="text-align:left;margin-top:8px;padding-left:20px;">${seccionesDetalle || '<li>Sin secciones visitadas</li>'}</ul>
+    `;
+  }
+
+
+  /* AUTO-REFRESH TIEMPO REAL */
+  let autoRefreshInterval = null;
+
+  function iniciarAutoRefresh(){
+    if(autoRefreshInterval) clearInterval(autoRefreshInterval);
+    autoRefreshInterval = setInterval(()=>{
+      const tabTodos = document.getElementById('tabTodos');
+      if(!tabTodos.classList.contains('oculto')){
+        cargarTodosAlumnos();
+        const ind = document.getElementById('indicadorTR');
+        if(ind){
+          const now = new Date().toLocaleTimeString('es-MX');
+          ind.innerHTML = '🟢 Tiempo real - Última actualización: ' + now;
+        }
+      }
+    }, 15000);
+  }
+
+
+  /* INICIAR SESION CON AUTO-REFRESH */
+  async function iniciarSesionConRefresh(){
+    const nombre = document.getElementById("nombreMaestro").value.trim();
+    const password = document.getElementById("passwordMaestro").value.trim();
+    const msg = document.getElementById("msgLogin");
+    if(!nombre || !password){ msg.textContent="Completa todos los campos"; return; }
+    const { data, error } = await supabaseClient.from("maestros").select("*").eq("nombre", nombre).eq("password", password).single();
+    if(error || !data){
+      msg.textContent = "❌ Nombre o contraseña incorrectos";
+    } else {
+      document.getElementById("loginMaestro").classList.add("oculto");
+      document.getElementById("panelScore").classList.remove("oculto");
+      cargarTodosAlumnos();
+      iniciarAutoRefresh();
+      const h1 = document.querySelector("#panelScore h1");
+      if(h1 && !document.getElementById("indicadorTR")){
+        const ind = document.createElement("div");
+        ind.id = "indicadorTR";
+        ind.style.cssText = "text-align:center;font-size:13px;color:#059669;margin-bottom:10px;background:#d1fae5;padding:6px;border-radius:8px;";
+        ind.innerHTML = "🟢 Tiempo real - Actualizando cada 15 segundos";
+        h1.after(ind);
+      }
+    }
+  }
+
+</script>
+
+</body>
+</html>
