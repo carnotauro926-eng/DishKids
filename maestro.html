@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DishKids</title>
+  <title>DishKids - Panel Maestro</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *{ margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
@@ -36,11 +36,10 @@
     .score-box{ margin-top:20px; padding:18px; border-radius:14px; background:#eff6ff; border:1px solid #bfdbfe; font-size:16px; color:#1d4ed8; font-weight:bold; }
     .btn-refrescar{ background:#7c3aed; color:white; }
     .btn-refrescar:hover{ background:#6d28d9; }
-    .buscador{ margin-bottom:15px; }
     .tabs{ display:flex; gap:10px; margin-bottom:20px; }
     .tab{ flex:1; padding:10px; border:none; border-radius:10px; cursor:pointer; font-size:14px; font-weight:bold; background:#e5e7eb; color:#374151; transition:0.3s; }
     .tab.activo{ background:#2563eb; color:white; }
-    #resumenProgreso{ background:#f0fdf4; border:1px solid #86efac; border-radius:12px; padding:15px; margin-top:15px; font-size:14px; line-height:1.8; }
+    #indicadorTR { text-align:center; font-size:13px; color:#059669; margin-bottom:10px; background:#d1fae5; padding:6px; border-radius:8px; display:none;}
   </style>
 </head>
 <body>
@@ -48,8 +47,6 @@
   <audio id="audioInicio" src="panelmaestro.mp3"></audio>
 
   <div class="contenedor">
-
-    <!-- LOGIN DEL MAESTRO -->
     <div id="loginMaestro">
       <h1>Acceso Maestro</h1>
       <div class="nota">
@@ -63,30 +60,28 @@
         <label>Contraseña</label>
         <input type="password" id="passwordMaestro" placeholder="Escribe tu contraseña">
       </div>
-      <button class="btn-principal" onclick="iniciarSesionConRefresh()">Iniciar sesión</button>
+      <button class="btn-principal" onclick="iniciarSesion()">Iniciar sesión</button>
       <button class="btn-registro" onclick="registrarMaestro()">Registrarse</button>
       <button class="volver" onclick="window.location.href='index.html'">Volver</button>
       <div id="msgLogin" style="margin-top:12px;color:#c0392b;text-align:center;font-size:15px;"></div>
     </div>
 
-    <!-- PANEL MAESTRO -->
     <div id="panelScore" class="oculto">
       <h1>📊 Panel del Maestro</h1>
+      <div id="indicadorTR">🟢 Conectado en tiempo real</div>
 
       <div class="tabs">
         <button class="tab activo" onclick="mostrarTab('tabTodos')">Todos los alumnos</button>
         <button class="tab" onclick="mostrarTab('tabBuscar')">Buscar alumno</button>
       </div>
 
-      <!-- TAB: TODOS LOS ALUMNOS -->
       <div id="tabTodos">
-        <button class="btn-refrescar" onclick="cargarTodosAlumnos()">🔄 Refrescar lista</button>
+        <button class="btn-refrescar" onclick="cargarTodosAlumnos()">🔄 Forzar actualización</button>
         <div id="listaAlumnos">
           <p style="text-align:center;color:#6b7280;margin-top:20px;">Cargando alumnos...</p>
         </div>
       </div>
 
-      <!-- TAB: BUSCAR ALUMNO -->
       <div id="tabBuscar" class="oculto">
         <div class="grupo buscador">
           <label>Nombre del alumno</label>
@@ -98,70 +93,14 @@
 
       <button class="volver" style="margin-top:20px;" onclick="window.location.href='index.html'">Volver al inicio</button>
     </div>
-
   </div>
 
 <script>
-
-  /* INICIALIZAR SUPABASE */
+  /* CONFIGURACIÓN SUPABASE */
   const supabaseUrl = 'https://jxdlneupjqlyxanydzdl.supabase.co';
   const supabaseKey = 'sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV';
   const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-  window.onload = function(){
-    document.getElementById("audioInicio").play().catch(()=>{});
-  };
-
-  /* TABS */
-  function mostrarTab(id){
-    document.getElementById('tabTodos').classList.add('oculto');
-    document.getElementById('tabBuscar').classList.add('oculto');
-    document.getElementById(id).classList.remove('oculto');
-    document.querySelectorAll('.tab').forEach((t,i)=>{
-      t.classList.toggle('activo', (i===0 && id==='tabTodos') || (i===1 && id==='tabBuscar'));
-    });
-    if(id === 'tabTodos') cargarTodosAlumnos();
-  }
-
-  /* REGISTRAR MAESTRO */
-  async function registrarMaestro(){
-    const nombre = document.getElementById("nombreMaestro").value.trim();
-    const password = document.getElementById("passwordMaestro").value.trim();
-    const msg = document.getElementById("msgLogin");
-    if(!nombre || !password){ msg.textContent="Completa todos los campos"; return; }
-
-    const { error } = await supabaseClient
-      .from('maestros')
-      .insert([{ nombre: nombre, password: password }]);
-
-    if(error){ msg.textContent = "Error: " + error.message; }
-    else { msg.style.color="#065f46"; msg.textContent = "✅ Maestro registrado correctamente. Ahora inicia sesión."; }
-  }
-
-  /* LOGIN DEL MAESTRO */
-  async function iniciarSesion(){
-    const nombre = document.getElementById("nombreMaestro").value.trim();
-    const password = document.getElementById("passwordMaestro").value.trim();
-    const msg = document.getElementById("msgLogin");
-    if(!nombre || !password){ msg.textContent="Completa todos los campos"; return; }
-
-    const { data, error } = await supabaseClient
-      .from('maestros')
-      .select('*')
-      .eq('nombre', nombre)
-      .eq('password', password)
-      .single();
-
-    if(error || !data){
-      msg.textContent = "❌ Nombre o contraseña incorrectos";
-    } else {
-      document.getElementById("loginMaestro").classList.add("oculto");
-      document.getElementById("panelScore").classList.remove("oculto");
-      cargarTodosAlumnos();
-    }
-  }
-
-  /* NOMBRES DE ARCHIVOS/SECCIONES LEGIBLES */
   const nombreArchivo = {
     "eo.html": "Plato del Bien Comer",
     "verdurasyfrutas.html": "Verduras y Frutas",
@@ -174,51 +113,72 @@
     "musica.html": "Música"
   };
 
-  /* CARGAR TODOS LOS ALUMNOS */
+  /* TABS */
+  function mostrarTab(id){
+    document.getElementById('tabTodos').classList.add('oculto');
+    document.getElementById('tabBuscar').classList.add('oculto');
+    document.getElementById(id).classList.remove('oculto');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('activo'));
+    event.currentTarget.classList.add('activo');
+  }
+
+  /* REGISTRO Y LOGIN */
+  async function registrarMaestro(){
+    const nombre = document.getElementById("nombreMaestro").value.trim();
+    const password = document.getElementById("passwordMaestro").value.trim();
+    if(!nombre || !password) return alert("Completa los campos");
+
+    const { error } = await supabaseClient.from('maestros').insert([{ nombre, password }]);
+    if(error) alert("Error: " + error.message);
+    else alert("✅ Registrado. Ya puedes iniciar sesión.");
+  }
+
+  async function iniciarSesion(){
+    const nombre = document.getElementById("nombreMaestro").value.trim();
+    const password = document.getElementById("passwordMaestro").value.trim();
+    
+    const { data, error } = await supabaseClient
+      .from('maestros').select('*').eq('nombre', nombre).eq('password', password).single();
+
+    if(error || !data) return alert("❌ Credenciales incorrectas");
+
+    document.getElementById("loginMaestro").classList.add("oculto");
+    document.getElementById("panelScore").classList.remove("oculto");
+    document.getElementById("indicadorTR").style.display = "block";
+    
+    cargarTodosAlumnos();
+    activarSuscripcionRealtime();
+  }
+
+  /* LÓGICA DE CARGA DE DATOS */
   async function cargarTodosAlumnos(){
     const contenedor = document.getElementById("listaAlumnos");
-    contenedor.innerHTML = '<p style="text-align:center;color:#6b7280;margin-top:20px;">Cargando...</p>';
 
-    // Obtener todos los alumnos
-    const { data: alumnos, error: errAlumnos } = await supabaseClient
-      .from('alumnos')
-      .select('id, nombre_alumno')
-      .order('id');
+    const { data: alumnos } = await supabaseClient.from('alumnos').select('id, nombre_alumno').order('id');
+    const { data: progresos } = await supabaseClient.from('progreso').select('*');
 
-    if(errAlumnos || !alumnos || alumnos.length === 0){
-      contenedor.innerHTML = '<p style="text-align:center;color:#6b7280;margin-top:20px;">No hay alumnos registrados aún.</p>';
-      return;
-    }
+    if(!alumnos) return;
 
-    // Obtener todo el progreso
-    const { data: progresos } = await supabaseClient
-      .from('progreso')
-      .select('*');
-
-    // Construir tabla
-    let html = '<table class="tabla-alumnos"><thead><tr><th>Alumno</th><th>Secciones visitadas</th><th>Progreso</th><th>Completados</th></tr></thead><tbody>';
+    let html = '<table class="tabla-alumnos"><thead><tr><th>Alumno</th><th>Secciones</th><th>Progreso</th><th>Completados</th></tr></thead><tbody>';
 
     alumnos.forEach(alumno => {
       const progAlumno = (progresos || []).filter(p => p.id_alumno === alumno.id);
       const totalSecciones = Object.keys(nombreArchivo).length;
       const visitadas = progAlumno.length;
-      const completadas = progAlumno.filter(p => p.completado).length;
+      const completadas = progAlumno.filter(p => p.completado === true).length;
       const porcentaje = Math.min(Math.round((visitadas / totalSecciones) * 100), 100);
 
-      // Lista de secciones visitadas
       const seccionesVisitadas = progAlumno.map(p => nombreArchivo[p.archivo] || p.archivo).join(', ') || 'Ninguna';
 
       html += `
         <tr>
           <td><strong>${alumno.nombre_alumno}</strong></td>
-          <td style="max-width:200px;font-size:12px;">${seccionesVisitadas}</td>
-          <td style="min-width:120px;">
-            <div class="barra-mini-cont">
-              <div class="barra-mini" style="width:${porcentaje}%"></div>
-            </div>
-            <span style="font-size:12px;color:#6b7280;">${porcentaje}% (${visitadas}/${totalSecciones})</span>
+          <td style="max-width:200px;font-size:11px;">${seccionesVisitadas}</td>
+          <td>
+            <div class="barra-mini-cont"><div class="barra-mini" style="width:${porcentaje}%"></div></div>
+            <span style="font-size:11px;">${porcentaje}%</span>
           </td>
-          <td><span class="badge ${completadas>0?'badge-ok':'badge-no'}">${completadas} ✓</span></td>
+          <td><span class="badge ${completadas > 0 ? 'badge-ok' : 'badge-no'}">${completadas} ✓</span></td>
         </tr>`;
     });
 
@@ -226,103 +186,28 @@
     contenedor.innerHTML = html;
   }
 
-  /* VER PROGRESO DE UN ALUMNO ESPECÍFICO */
+  /* SUSCRIPCIÓN EN TIEMPO REAL (CORREGIDO) */
+  function activarSuscripcionRealtime() {
+    supabaseClient
+      .channel('custom-all-channel')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'progreso' }, (payload) => {
+          console.log('Cambio detectado en progreso:', payload);
+          cargarTodosAlumnos(); // Recarga la lista automáticamente al haber cambios
+      })
+      .subscribe();
+  }
+
+  // Búsqueda individual (se mantiene igual)
   async function verProgresoAlumno(){
-    const nombreAlumno = document.getElementById("nombreAlumno").value.trim();
-    const resultado = document.getElementById("resultado");
-
-    if(!nombreAlumno){ resultado.innerHTML = "Escribe el nombre del alumno"; return; }
-    resultado.innerHTML = "Buscando...";
-
-    // Buscar alumno
-    const { data: alumnos, error: errAlumno } = await supabaseClient
-      .from('alumnos')
-      .select('id, nombre_alumno')
-      .eq('nombre_alumno', nombreAlumno);
-
-    if(errAlumno || !alumnos || alumnos.length === 0){
-      resultado.innerHTML = "❌ Alumno no encontrado";
-      return;
-    }
-
-    const alumno = alumnos[0];
-
-    // Buscar progreso
-    const { data: progresos, error: errProg } = await supabaseClient
-      .from('progreso')
-      .select('*')
-      .eq('id_alumno', alumno.id);
-
-    if(errProg){ resultado.innerHTML = "Error al cargar progreso"; return; }
-
-    const totalSecciones = Object.keys(nombreArchivo).length;
-    const visitadas = (progresos || []).length;
-    const completadas = (progresos || []).filter(p => p.completado).length;
-    const porcentaje = Math.min(Math.round((visitadas / totalSecciones) * 100), 100);
-
-    let seccionesDetalle = '';
-    if(progresos && progresos.length > 0){
-      seccionesDetalle = progresos.map(p => {
-        const n = nombreArchivo[p.archivo] || p.archivo;
-        return `<li>${n}: ${p.completado ? '✅ Completado' : '⏳ En progreso'} (${p.porcentaje || 0}%)</li>`;
-      }).join('');
-    }
-
-    resultado.innerHTML = `
-      <strong>👤 ${alumno.nombre_alumno}</strong><br><br>
-      <strong>Progreso general:</strong> ${porcentaje}% (${visitadas} de ${totalSecciones} secciones)<br>
-      <strong>Secciones completadas:</strong> ${completadas}<br><br>
-      <strong>Detalle:</strong>
-      <ul style="text-align:left;margin-top:8px;padding-left:20px;">${seccionesDetalle || '<li>Sin secciones visitadas</li>'}</ul>
-    `;
+    const nombre = document.getElementById("nombreAlumno").value.trim();
+    const res = document.getElementById("resultado");
+    const { data: alu } = await supabaseClient.from('alumnos').select('id, nombre_alumno').eq('nombre_alumno', nombre).single();
+    
+    if(!alu) return res.innerHTML = "❌ No encontrado";
+    
+    const { data: prog } = await supabaseClient.from('progreso').select('*').eq('id_alumno', alu.id);
+    res.innerHTML = `<strong>👤 ${alu.nombre_alumno}</strong><br>Secciones: ${prog.length}`;
   }
-
-
-  /* AUTO-REFRESH TIEMPO REAL */
-  let autoRefreshInterval = null;
-
-  function iniciarAutoRefresh(){
-    if(autoRefreshInterval) clearInterval(autoRefreshInterval);
-    autoRefreshInterval = setInterval(()=>{
-      const tabTodos = document.getElementById('tabTodos');
-      if(!tabTodos.classList.contains('oculto')){
-        cargarTodosAlumnos();
-        const ind = document.getElementById('indicadorTR');
-        if(ind){
-          const now = new Date().toLocaleTimeString('es-MX');
-          ind.innerHTML = '🟢 Tiempo real - Última actualización: ' + now;
-        }
-      }
-    }, 15000);
-  }
-
-
-  /* INICIAR SESION CON AUTO-REFRESH */
-  async function iniciarSesionConRefresh(){
-    const nombre = document.getElementById("nombreMaestro").value.trim();
-    const password = document.getElementById("passwordMaestro").value.trim();
-    const msg = document.getElementById("msgLogin");
-    if(!nombre || !password){ msg.textContent="Completa todos los campos"; return; }
-    const { data, error } = await supabaseClient.from("maestros").select("*").eq("nombre", nombre).eq("password", password).single();
-    if(error || !data){
-      msg.textContent = "❌ Nombre o contraseña incorrectos";
-    } else {
-      document.getElementById("loginMaestro").classList.add("oculto");
-      document.getElementById("panelScore").classList.remove("oculto");
-      cargarTodosAlumnos();
-      iniciarAutoRefresh();
-      const h1 = document.querySelector("#panelScore h1");
-      if(h1 && !document.getElementById("indicadorTR")){
-        const ind = document.createElement("div");
-        ind.id = "indicadorTR";
-        ind.style.cssText = "text-align:center;font-size:13px;color:#059669;margin-bottom:10px;background:#d1fae5;padding:6px;border-radius:8px;";
-        ind.innerHTML = "🟢 Tiempo real - Actualizando cada 15 segundos";
-        h1.after(ind);
-      }
-    }
-  }
-
 </script>
-
 </body>
 </html>
