@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DishKids</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    min-height:100vh;
+    overflow:hidden;
+
+    background:linear-gradient(135deg,#fff3e0,#ffe0b2);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* FONDO ANIMADO */
+
+body::before{
+    content:"";
+    position:absolute;
+    width:200%;
+    height:200%;
+    background:
+    radial-gradient(circle,#ffffff55 10%,transparent 10%);
+    background-size:80px 80px;
+
+    animation:moverFondo 20s linear infinite;
+}
+
+@keyframes moverFondo{
+    from{
+        transform:translate(0,0);
+    }
+
+    to{
+        transform:translate(-200px,-200px);
+    }
+}
+
+/* CONTENEDOR */
+
+.contenedor{
+    position:relative;
+    z-index:2;
+
+    width:95%;
+    max-width:1400px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    animation:entrada 1.2s ease;
+}
+
+@keyframes entrada{
+    from{
+        opacity:0;
+        transform:translateY(50px) scale(0.9);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+/* AVATAR */
+
+.avatarBox{
+    position:absolute;
+    top:20px;
+    left:20px;
+
+    background:white;
+    padding:15px 20px;
+    border-radius:20px;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+
+    animation:avatarEntrada 1s ease;
+}
+
+@keyframes avatarEntrada{
+    from{
+        opacity:0;
+        transform:translateX(-50px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+.avatarEmoji{
+    font-size:55px;
+}
+
+.avatarTexto{
+    font-size:20px;
+    color:#5c4630;
+    font-weight:bold;
+}
+
+/* SECCIÓN CENTRAL */
+
+.escena{
+    width:100%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:40px;
+
+    margin-top:80px;
+    margin-bottom:50px;
+}
+
+/* VIDEOS */
+
+video{
+    width:260px;
+    border-radius:30px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+
+    animation:flotar 3s ease-in-out infinite;
+}
+
+/* PLATO */
+
+.plato{
+    width:350px;
+
+    animation:
+    entradaPlato 1.2s ease,
+    girar 6s linear infinite;
+}
+
+@keyframes entradaPlato{
+    from{
+        opacity:0;
+        transform:scale(0.5) rotate(-180deg);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1) rotate(0deg);
+    }
+}
+
+@keyframes girar{
+    0%{
+        transform:rotate(0deg);
+    }
+
+    100%{
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes flotar{
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-15px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+/* BOTONES */
+
+.botones{
+    display:grid;
+    grid-template-columns:repeat(2,250px);
+    gap:25px;
+}
+
+button{
+    padding:22px;
+    border:none;
+    border-radius:25px;
+
+    font-size:22px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    color:white;
+
+    transition:0.35s;
+
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+
+    animation:botonEntrada 1s ease;
+}
+
+@keyframes botonEntrada{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+button:hover{
+    transform:scale(1.08);
+}
+
+/* COLORES */
+
+.verduras{
+    background:#22c55e;
+}
+
+.verduras:hover{
+    background:#16a34a;
+}
+
+.cereales{
+    background:#f59e0b;
+}
+
+.cereales:hover{
+    background:#d97706;
+}
+
+.leguminosas{
+    background:#8b5cf6;
+}
+
+.leguminosas:hover{
+    background:#7c3aed;
+}
+
+.animal{
+    background:#ef4444;
+}
+
+.animal:hover{
+    background:#dc2626;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+    .escena{
+        flex-direction:column;
+    }
+
+    video{
+        width:220px;
+    }
+
+    .plato{
+        width:280px;
+    }
+
+    .botones{
+        grid-template-columns:1fr;
+        width:100%;
+    }
+
+    button{
+        width:100%;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- AVATAR -->
+<div class="avatarBox">
+
+    <div class="avatarEmoji" id="avatar"></div>
+
+    <div class="avatarTexto">
+        Tu Avatar
+    </div>
+
+</div>
+
+<!-- CONTENIDO -->
+<div class="contenedor">
+
+    <!-- ESCENA -->
+    <div class="escena">
+
+        <!-- VIDEO IZQUIERDO -->
+        <video autoplay muted loop>
+            <source src="chicavideo.mp4" type="video/mp4">
+        </video>
+
+        <!-- PLATO -->
+        <img src="Plato.png.png" class="plato">
+
+        <!-- VIDEO DERECHO -->
+        <video autoplay muted loop>
+            <source src="chicovideo.mp4" type="video/mp4">
+        </video>
+
+    </div>
+
+    <!-- BOTONES -->
+    <div class="botones">
+
+        <button class="verduras"
+        onclick="window.location.href='verdurasyfrutas.html'">
+            🥦 Verduras y Frutas
+        </button>
+
+        <button class="cereales"
+        onclick="window.location.href='cereales.html'">
+            🌾 Cereales
+        </button>
+
+        <button class="leguminosas"
+        onclick="window.location.href='leguminosas.html'">
+            🫘 Leguminosas
+        </button>
+
+        <button class="animal"
+        onclick="window.location.href='origenanimal.html'">
+            🍗 Origen Animal
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* OBTENER AVATAR */
+
+const avatarGuardado =
+localStorage.getItem("avatarSeleccionado");
+
+const avatar =
+document.getElementById("avatar");
+
+if(avatarGuardado){
+
+    avatar.innerHTML = avatarGuardado;
+
+}else{
+
+    avatar.innerHTML = "🙂";
+
+}
+
+</script>
+
+</body>
+</html>
