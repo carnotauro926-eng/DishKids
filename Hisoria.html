@@ -168,7 +168,40 @@ button:hover, a.button:hover{
 
 <div id="result"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+/* =========================
+   CONFIGURACIÓN SUPABASE
+========================= */
+const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
+const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
+const supabaseClient = supabase.createClient(_supabaseUrl, _supabaseKey);
+
+async function registrarAvanceJuego(porcentajeObtenido, esCompletado) {
+    const nombre = localStorage.getItem("nombreAlumno");
+    if (!nombre) return;
+
+    const { data: alumno } = await supabaseClient
+        .from('alumnos')
+        .select('id')
+        .eq('nombre_alumno', nombre)
+        .single();
+
+    if (alumno) {
+        await supabaseClient.from('progreso').upsert({
+            id_alumno: alumno.id,
+            archivo: "Crea tu Plato", // Nombre descriptivo para el maestro
+            porcentaje: porcentajeObtenido, 
+            completado: esCompletado,
+            fecha: new Date().toISOString()
+        }, { onConflict: 'id_alumno, archivo' });
+    }
+}
+
+/* =========================
+   LÓGICA DEL JUEGO (CORREGIDA)
+========================= */
 const healthyFoods = ["🥦","🥕","🍎","🍌","🍇","🍉","🥗","🌽","🍓","🥑"];
 const unhealthyFoods = ["🍔","🍟","🍕","🌭","🍩","🍪","🍫","🥤","🍦","🍿"];
 
@@ -180,15 +213,11 @@ function shuffle(array){
 
 function loadFoods(){
     selected = [];
-
     let foods = shuffle([...healthyFoods, ...unhealthyFoods]);
-
     let row1 = document.getElementById("row1");
     let row2 = document.getElementById("row2");
-
     row1.innerHTML = "";
     row2.innerHTML = "";
-
     foods.slice(0,10).forEach(createFood(row1));
     foods.slice(10,20).forEach(createFood(row2));
 }
@@ -200,11 +229,9 @@ function createFood(container){
         span.draggable = true;
         span.innerHTML = food;
         span.id = "food" + Math.random();
-
         span.ondragstart = (e) => {
             e.dataTransfer.setData("text", span.id);
         };
-
         container.appendChild(span);
     }
 }
@@ -217,23 +244,28 @@ function drop(ev){
     ev.preventDefault();
     let data = ev.dataTransfer.getData("text");
     let element = document.getElementById(data);
+    
+    // Evitar que el texto guía se quede ahí
+    const circle = document.getElementById("circle");
+    if(circle.innerText === "Arrastra aquí tu comida") circle.innerText = "";
 
-    document.getElementById("circle").appendChild(element);
+    circle.appendChild(element);
     selected.push(element.innerHTML);
 }
 
 function checkPlate(){
     let healthyCount = selected.filter(f => healthyFoods.includes(f)).length;
     let total = selected.length;
-
     let score = total === 0 ? 0 : Math.round((healthyCount / total) * 100);
 
     let msg = "";
+    let completado = false;
 
     if(total === 0){
         msg = "😅 No agregaste alimentos";
     } else if(score >= 70){
         msg = "🌟 ¡Muy saludable! " + score + "%";
+        completado = true; // Se marca como completado si es saludable
     } else if(score >= 40){
         msg = "🙂 Regular " + score + "%";
     } else {
@@ -241,6 +273,10 @@ function checkPlate(){
     }
 
     document.getElementById("result").innerText = msg;
+    
+    // REGISTRO EN SUPABASE
+    // Enviamos el progreso al maestro cuando el niño le da a "OK"
+    registrarAvanceJuego(score, completado);
 }
 
 function resetGame(){
