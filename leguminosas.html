@@ -26,6 +26,8 @@ body{
     align-items:center;
 
     position:relative;
+
+    overflow:hidden;
 }
 
 /* FONDO */
@@ -44,7 +46,7 @@ body{
 
     overflow:hidden;
 
-    z-index:0;
+    z-index:1;
 
     pointer-events:none;
 }
@@ -444,16 +446,41 @@ window.supabase.createClient(
    AUDIO AUTOMÁTICO
 ========================= */
 
-window.onload = function(){
+/* =========================
+   AUDIO DE ENTRADA
+========================= */
+
+window.addEventListener("load", () => {
 
     const audio =
     document.getElementById("audioInicio");
 
-    audio.play().catch(()=>{});
+    audio.volume = 1;
+
+    /* INTENTAR REPRODUCIR */
+
+    audio.play().catch(() => {
+
+        console.log(
+        "Autoplay bloqueado"
+        );
+
+        /* SE REPRODUCE AL PRIMER CLICK */
+
+        document.body.addEventListener(
+        "click",
+        () => {
+
+            audio.play();
+
+        },
+        { once:true });
+
+    });
 
     guardarVisita();
 
-};
+});
 
 /* =========================
    AVATAR
