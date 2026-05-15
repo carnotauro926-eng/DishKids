@@ -3,229 +3,259 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>DishKids</title>
 
 <style>
+/* Respetando el diseño exacto de la imagen proporcionada */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
 body{
-font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background:linear-gradient(135deg,#f5f0e9,#ebe3d5);
-min-height:100vh;
-margin:0;
-overflow:hidden;
-display:flex;
-justify-content:center;
-align-items:center;
-position:relative;
+    font-family:Arial,sans-serif;
+    overflow-x:hidden;
+    min-height:100vh;
+    background:linear-gradient(135deg,#f3e8ff,#ddd6fe); /* Tonos morados para leguminosas */
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+}
+
+/* FONDO EMOJIS */
+.fondo{
+    position:fixed;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    z-index:0;
+}
+
+.emoji{
+    position:absolute;
+    font-size:40px;
+    animation:flotar linear infinite;
+    opacity:0.25;
+}
+
+@keyframes flotar{
+    from{ transform:translateY(110vh) rotate(0deg); }
+    to{ transform:translateY(-120vh) rotate(360deg); }
+}
+
+/* CONTENEDOR */
+.contenedor{
+    position:relative;
+    z-index:2;
+    width:95%;
+    max-width:1200px;
+    padding:30px;
+    animation:entrada 1s ease;
+}
+
+@keyframes entrada{
+    from{ opacity:0; transform:translateY(50px); }
+    to{ opacity:1; transform:translateY(0); }
 }
 
 /* AVATAR */
-.avatar-esquina{
-position:fixed;
-top:15px;
-right:15px;
-font-size:50px;
-background:white;
-border-radius:50%;
-padding:10px;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
-z-index:9999;
+.avatarBox{
+    position:absolute;
+    top:20px;
+    left:20px;
+    background:white;
+    padding:15px 20px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    animation:avatarEntrada 1s ease;
 }
 
-/* CONTENIDO */
-.content-wrapper{
-position:relative;
-z-index:10;
-text-align:center;
-max-width:1200px;
-width:100%;
+@keyframes avatarEntrada{
+    from{ opacity:0; transform:translateX(-40px); }
+    to{ opacity:1; transform:translateX(0); }
 }
 
+.avatarEmoji{ font-size:50px; }
+
+/* TITULO */
 h1{
-font-family:'Comic Sans MS', cursive;
-color:#b45f06;
-margin:40px 0;
-font-size:3rem;
+    text-align:center;
+    font-size:50px;
+    color:#4c1d95; /* Color morado oscuro */
+    margin-top:60px;
+    margin-bottom:50px;
+    animation:titulo 1s ease;
 }
 
-/* CARDS */
-.container{
-display:flex;
-flex-wrap:wrap;
-gap:40px;
-justify-content:center;
+/* TARJETAS (ESTILO IMAGEN) */
+.tarjetas{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:30px;
 }
 
-.card{
-width:420px;
-background:white;
-border-radius:20px;
-box-shadow:0 12px 35px rgba(0,0,0,0.12);
-overflow:hidden;
-cursor:pointer;
-transition:0.4s;
+.tarjeta{
+    background:white;
+    border-radius:30px;
+    padding:35px;
+    cursor:pointer;
+    transition:0.4s;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    text-align:center;
+    animation:tarjetaEntrada 1.2s ease;
 }
 
-.card:hover{
-transform:translateY(-10px) scale(1.03);
+.tarjeta:hover{
+    transform:scale(1.05) rotate(1deg);
+    background:#f5f3ff;
 }
 
-.card-header{
-background:#f6b26b;
-color:#6b3e00;
-padding:20px;
-font-size:1.8rem;
-font-weight:bold;
+.icono{
+    font-size:80px;
+    margin-bottom:20px;
+    animation:rebote 2s infinite;
 }
 
-.card-body{
-padding:25px;
-font-size:1.2rem;
-line-height:1.6;
-color:#333;
+@keyframes rebote{
+    0%, 100%{ transform:translateY(0); }
+    50%{ transform:translateY(-10px); }
 }
 
-/* BOTONES */
-.nav-buttons{
-margin-top:40px;
-display:flex;
-gap:20px;
-justify-content:center;
-flex-wrap:wrap;
+.tarjeta p{
+    font-size:24px;
+    line-height:1.6;
+    color:#4c1d95;
 }
 
-.nav-buttons a{
-text-decoration:none;
-padding:14px 22px;
-border-radius:12px;
-font-weight:bold;
-color:white;
+/* BOTONES INFERIORES */
+.botones{
+    margin-top:60px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
 }
 
-.btn-verdes{background:#6ab04c;}
-.btn-cereales{background:#f6d365;color:#5a4b00;}
-.btn-animal{background:#ffd6c9;color:#7a3a2f;}
-
-/* EMOJIS */
-.emoji-float{
-position:absolute;
-font-size:2.5rem;
-pointer-events:none;
-animation:float 18s linear infinite;
-opacity:0;
+button{
+    padding:20px;
+    border:none;
+    border-radius:25px;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+    color:white;
+    transition:0.3s;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
 }
 
-@keyframes float{
-0%{transform:translateY(100vh);opacity:0}
-10%{opacity:.7}
-50%{opacity:1}
-100%{transform:translateY(-120vh);opacity:0}
-}
+button:hover{ transform:scale(1.08); }
 
+.verdes{ background:#22c55e; }
+.cereales{ background:#f59e0b; }
+.animal{ background:#ef4444; }
+
+@media(max-width:768px){
+    h1{ font-size:36px; }
+    .tarjeta p{ font-size:20px; }
+}
 </style>
 </head>
 
 <body>
 
-<!-- AUDIO -->
 <audio id="audioInicio" src="Seccionleguminosas.mp3"></audio>
 <audio id="audio1" src="Leguminosas.mp3"></audio>
 <audio id="audio2" src="Importancialeguminosas.mp3"></audio>
 
-<!-- AVATAR -->
-<div class="avatar-esquina" id="avatar">🙂</div>
+<div class="fondo" id="fondo"></div>
 
-<div class="content-wrapper">
-
-<h1>¡Consume leguminosas!</h1>
-
-<div class="container">
-
-<div class="card" onclick="reproducir('audio1')">
-<div class="card-header">Leguminosas</div>
-<div class="card-body">
-Frijoles, lentejas, garbanzos y habas.
-</div>
+<div class="avatarBox">
+    <div class="avatarEmoji" id="avatar"></div>
 </div>
 
-<div class="card" onclick="reproducir('audio2')">
-<div class="card-header">Importancia</div>
-<div class="card-body">
-Aportan proteínas vegetales, fibra y energía.
-</div>
-</div>
+<div class="contenedor">
 
-</div>
+    <h1>🫘 Leguminosas 🍲</h1>
 
-<div class="nav-buttons">
-<a class="btn-verdes" href="verdurasyfrutas.html">Verduras</a>
-<a class="btn-cereales" href="cereales.html">Cereales</a>
-<a class="btn-animal" href="origenanimal.html">Origen Animal</a>
-</div>
+    <div class="tarjetas">
+
+        <div class="tarjeta" onclick="reproducirAudio('audio1')">
+            <div class="icono">🫘🌱🍲🌿</div>
+            <p>
+                Incluye alimentos como frijoles, 
+                lentejas, garbanzos, habas 
+                y chícharos secos.
+            </p>
+        </div>
+
+        <div class="tarjeta" onclick="reproducirAudio('audio2')">
+            <div class="icono">💪🥗⚡🍲</div>
+            <p>
+                Las leguminosas nos dan proteínas 
+                para crecer y mucha fibra para que 
+                nuestra pancita funcione bien.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="botones">
+        <button class="verdes" onclick="window.location.href='verdurasyfrutas.html'">
+            🥦 Verduras y Frutas
+        </button>
+
+        <button class="cereales" onclick="window.location.href='cereales.html'">
+            🌾 Cereales
+        </button>
+
+        <button class="animal" onclick="window.location.href='origenanimal.html'">
+            🍗 Origen Animal
+        </button>
+    </div>
 
 </div>
 
 <script>
-
-/* =========================
-   AUDIO FIX REAL (IMPORTANTE)
-========================= */
-
-let unlocked = false;
-
-function unlockAudio(){
-unlocked = true;
-document.getElementById("audioInicio").play().catch(()=>{});
-}
-
-window.addEventListener("click", unlockAudio, { once:true });
-
-window.onload = () => {
-document.getElementById("audioInicio").play().catch(()=>{});
-crearEmojis();
+/* AUDIO AUTOMÁTICO */
+window.onload = function(){
+    const audio = document.getElementById("audioInicio");
+    audio.play().catch(()=>{});
+    crearEmojis();
 };
 
-/* =========================
-   REPRODUCIR AUDIOS
-========================= */
+/* AVATAR DINÁMICO */
+const avatarGuardado = localStorage.getItem("avatarSeleccionado") || localStorage.getItem("avatarElegido");
+const avatar = document.getElementById("avatar");
+avatar.innerHTML = avatarGuardado ? avatarGuardado : "🙂";
 
-function reproducir(id){
-const audio = document.getElementById(id);
-audio.currentTime = 0;
-audio.play().catch(()=>{});
+/* REPRODUCIR AUDIOS */
+function reproducirAudio(id){
+    const audio = document.getElementById(id);
+    audio.currentTime = 0;
+    audio.play();
 }
 
-/* =========================
-   EMOJIS (ESTILO TU BUENO)
-========================= */
-
+/* EMOJIS FLOTANTES ADAPTADOS */
 function crearEmojis(){
+    const emojis = ["🫘","🌱","🍲","🥗","🌿","💪"];
+    const fondo = document.getElementById("fondo");
 
-const emojis = ["🫘","🌱","🥗","🍲","💪","⚡","🌿"];
-
-for(let i=0;i<40;i++){
-
-const e = document.createElement("div");
-e.className="emoji-float";
-e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-
-e.style.left = Math.random()*100+"vw";
-e.style.fontSize = (1.5 + Math.random()*1.5)+"rem";
-e.style.animationDuration = (12 + Math.random()*10)+"s";
-e.style.animationDelay = Math.random()*5+"s";
-
-document.body.appendChild(e);
-
+    for(let i=0;i<40;i++){
+        const span = document.createElement("span");
+        span.classList.add("emoji");
+        span.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+        span.style.left = Math.random()*100 + "%";
+        span.style.animationDuration = (8 + Math.random()*10) + "s";
+        span.style.fontSize = (25 + Math.random()*35) + "px";
+        span.style.animationDelay = Math.random()*5 + "s";
+        fondo.appendChild(span);
+    }
 }
-}
-
-/* =========================
-   AVATAR
-========================= */
-
-document.getElementById("avatar").innerText =
-localStorage.getItem("avatarElegido") || "🙂";
-
 </script>
 
 </body>
