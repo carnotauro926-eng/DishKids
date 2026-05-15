@@ -211,12 +211,47 @@ button:hover{ transform:scale(1.08); }
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-/* REPRODUCCIÓN AUTOMÁTICA AL CARGAR */
+/* =========================
+   CONFIGURACIÓN SUPABASE
+========================= */
+const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
+const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
+const supabaseClient = supabase.createClient(_supabaseUrl, _supabaseKey);
+
+async function registrarAvance() {
+    const nombre = localStorage.getItem("nombreAlumno");
+    if (!nombre) return;
+
+    // 1. Buscamos al alumno para obtener su ID
+    const { data: alumno } = await supabaseClient
+        .from('alumnos')
+        .select('id')
+        .eq('nombre_alumno', nombre)
+        .single();
+
+    if (alumno) {
+        // 2. Registramos el progreso del 95%
+        await supabaseClient.from('progreso').upsert({
+            id_alumno: alumno.id,
+            archivo: "origenanimal.html",
+            porcentaje: 95,
+            completado: false,
+            fecha: new Date().toISOString()
+        }, { onConflict: 'id_alumno, archivo' });
+    }
+}
+
+/* =========================
+   LÓGICA DE LA PÁGINA
+========================= */
+
 window.onload = function(){
+    registrarAvance(); // Registro automático
+
     const audio = document.getElementById("audioInicio");
-    // Nota: El navegador puede bloquear el audio si no ha habido interacción previa.
-    // Esta función intenta reproducirlo inmediatamente.
     audio.play().catch(error => {
         console.log("El audio se reproducirá tras el primer clic del usuario.");
     });
