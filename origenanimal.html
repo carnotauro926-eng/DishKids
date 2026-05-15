@@ -8,6 +8,7 @@
 
 <style>
 
+/* RESET */
 *{
     margin:0;
     padding:0;
@@ -16,67 +17,44 @@
 
 body{
     font-family:Arial,sans-serif;
-    overflow:hidden;
     min-height:100vh;
-
-    background:linear-gradient(135deg,#fee2e2,#fecaca);
-
+    overflow:hidden;
     display:flex;
     justify-content:center;
     align-items:center;
-
+    background:linear-gradient(135deg,#fee2e2,#fecaca);
     position:relative;
-}
-
-/* CAPA OSCURA SUAVE */
-body::after{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:rgba(255,255,255,0.05);
-    z-index:1;
-    pointer-events:none;
 }
 
 /* FONDO EMOJIS */
 .fondo{
     position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
+    inset:0;
+    overflow:hidden;
     z-index:0;
     pointer-events:none;
 }
 
 .emoji{
     position:absolute;
-    bottom:-120px;
-    opacity:0.3;
+    bottom:-100px;
+    font-size:40px;
+    opacity:0.25;
     animation:flotar linear infinite;
 }
 
 @keyframes flotar{
-    0%{
-        transform:translateY(0) rotate(0deg) scale(0.7);
-        opacity:0;
-    }
-    50%{
-        opacity:0.3;
-    }
-    100%{
-        transform:translateY(-130vh) rotate(360deg) scale(1.2);
-        opacity:0;
-    }
+    from{ transform:translateY(110vh) rotate(0deg); }
+    to{ transform:translateY(-120vh) rotate(360deg); }
 }
 
-/* CONTENEDOR */
+/* CONTENIDO */
 .contenedor{
     position:relative;
     z-index:2;
     width:95%;
     max-width:1200px;
-    padding:30px;
+    text-align:center;
 }
 
 /* AVATAR */
@@ -88,8 +66,10 @@ body::after{
     padding:15px 20px;
     border-radius:20px;
     display:flex;
+    gap:10px;
     align-items:center;
     box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    z-index:10;
 }
 
 .avatarEmoji{
@@ -98,9 +78,8 @@ body::after{
 
 /* TITULO */
 h1{
-    text-align:center;
-    font-size:50px;
-    color:#7f1d1d;
+    font-size:48px;
+    color:#991b1b;
     margin-bottom:40px;
 }
 
@@ -108,17 +87,16 @@ h1{
 .tarjetas{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:30px;
+    gap:25px;
 }
 
 .tarjeta{
     background:white;
-    border-radius:30px;
-    padding:35px;
+    padding:30px;
+    border-radius:25px;
     cursor:pointer;
-    text-align:center;
+    box-shadow:0 10px 20px rgba(0,0,0,0.15);
     transition:0.3s;
-    box-shadow:0 10px 25px rgba(0,0,0,0.15);
 }
 
 .tarjeta:hover{
@@ -133,10 +111,10 @@ h1{
 
 /* BOTONES */
 .botones{
-    margin-top:50px;
+    margin-top:40px;
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:20px;
+    gap:15px;
 }
 
 button{
@@ -144,14 +122,15 @@ button{
     border:none;
     border-radius:20px;
     font-size:18px;
-    cursor:pointer;
+    font-weight:bold;
     color:white;
+    cursor:pointer;
 }
 
 .verduras{background:#22c55e;}
 .cereales{background:#f59e0b;}
 .leguminosas{background:#8b5cf6;}
-.siguiente{background:#2563eb;}
+.animal{background:#ef4444;}
 
 </style>
 </head>
@@ -162,16 +141,16 @@ button{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <!-- AUDIOS -->
-<audio id="audioInicio" src="./seccion-animal.mp3"></audio>
-<audio id="audio1" src="./info-animal.mp3"></audio>
-<audio id="audio2" src="./importancia-animal.mp3"></audio>
+<audio id="audioInicio" src="Seccionanimal.mp3" preload="auto"></audio>
+<audio id="audio1" src="Origenanimal.mp3"></audio>
+<audio id="audio2" src="Importanciaorigenanimal.mp3"></audio>
 
 <!-- FONDO -->
 <div class="fondo" id="fondo"></div>
 
 <!-- AVATAR -->
 <div class="avatarBox">
-    <div class="avatarEmoji" id="avatar"></div>
+    <div class="avatarEmoji" id="avatar">🙂</div>
 </div>
 
 <!-- CONTENIDO -->
@@ -181,39 +160,24 @@ button{
 
 <div class="tarjetas">
 
-    <div class="tarjeta" onclick="reproducirAudio('audio1')">
-        <div class="icono">🍗🥩🥚</div>
-        <p>Incluye carne, huevo, leche y pescado.</p>
-    </div>
+<div class="tarjeta" onclick="reproducir('audio1')">
+<div class="icono">🍗🥚🧀</div>
+<p>Incluye carne, pollo, pescado, leche y huevo.</p>
+</div>
 
-    <div class="tarjeta" onclick="reproducirAudio('audio2')">
-        <div class="icono">💪⚡🧀</div>
-        <p>Ayudan al crecimiento y fortalecen el cuerpo.</p>
-    </div>
+<div class="tarjeta" onclick="reproducir('audio2')">
+<div class="icono">💪⚡🥛</div>
+<p>Aportan proteínas para crecer fuerte.</p>
+</div>
 
 </div>
 
 <div class="botones">
 
-    <button class="verduras"
-    onclick="location.href='verdurasyfrutas.html'">
-        🥦 Verduras
-    </button>
-
-    <button class="cereales"
-    onclick="location.href='cereales.html'">
-        🌾 Cereales
-    </button>
-
-    <button class="leguminosas"
-    onclick="location.href='leguminosas.html'">
-        🫘 Leguminosas
-    </button>
-
-    <button class="siguiente"
-    onclick="location.href='Historia.html'">
-        ➡️ Siguiente
-    </button>
+<button class="verduras" onclick="location.href='verdurasyfrutas.html'">Verduras</button>
+<button class="cereales" onclick="location.href='cereales.html'">Cereales</button>
+<button class="leguminosas" onclick="location.href='leguminosas.html'">Leguminosas</button>
+<button class="animal" onclick="location.href='origenanimal.html'">Origen Animal</button>
 
 </div>
 
@@ -221,93 +185,98 @@ button{
 
 <script>
 
-/* SUPABASE */
+/* =========================
+   SUPABASE (CORREGIDO)
+========================= */
 const supabase = window.supabase.createClient(
-"https://jxdlneupjqlyxanydzdl.supabase.co",
-"sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV"
+  "https://jxdlneupjqlyxanydzdl.supabase.co",
+  "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV"
 );
 
-/* AUDIO CONTROL */
-let audioActivo = null;
+/* =========================
+   AUDIO INICIO (SEGURO)
+========================= */
+const audioInicio = document.getElementById("audioInicio");
 
-function reproducir(audio){
-
-    if(audioActivo){
-        audioActivo.pause();
-        audioActivo.currentTime = 0;
-    }
-
-    audioActivo = audio;
-
-    audio.play().catch(()=>{});
-
+function playInicio(){
+    audioInicio.play().catch(()=>{});
 }
 
-/* AUDIO INICIO (FIX REAL) */
 window.addEventListener("load", () => {
 
-    const audioInicio =
-    document.getElementById("audioInicio");
-
-    reproducir(audioInicio);
+    playInicio();
 
     document.body.addEventListener("click", () => {
-        reproducir(audioInicio);
+        playInicio();
     }, { once:true });
 
-    guardarVisita();
-
+    registrarEntrada();
 });
 
-/* AVATAR */
-document.getElementById("avatar").innerHTML =
-localStorage.getItem("avatarSeleccionado") || "🙂";
+/* =========================
+   REPRODUCIR AUDIOS
+========================= */
+function reproducir(id){
+    const a = document.getElementById(id);
+    a.currentTime = 0;
+    a.play().catch(()=>{});
 
-/* AUDIO TARJETAS */
-async function reproducirAudio(id){
-
-    const audio = document.getElementById(id);
-    audio.currentTime = 0;
-
-    reproducir(audio);
-
-    await supabase.from("actividad").insert([{
-        nombre: localStorage.getItem("nombreAlumno"),
-        avatar: localStorage.getItem("avatarSeleccionado"),
-        seccion:"Origen Animal",
-        accion:"Escuchó contenido"
-    }]);
-
+    registrarAccion(id);
 }
 
-/* VISITA */
-async function guardarVisita(){
+/* =========================
+   SUPABASE: REGISTRO
+========================= */
+
+async function registrarEntrada(){
+
+    const nombre = localStorage.getItem("nombreAlumno");
+    const avatar = localStorage.getItem("avatarSeleccionado");
+
+    if(!nombre) return;
 
     await supabase.from("actividad").insert([{
-        nombre: localStorage.getItem("nombreAlumno"),
-        avatar: localStorage.getItem("avatarSeleccionado"),
+        nombre,
+        avatar,
         seccion:"Origen Animal",
         accion:"Entró a la sección"
     }]);
-
 }
 
-/* EMOJIS FLOTANTES */
-const emojis = ["🍗","🥩","🥚","🐟","🧀","🥛","🍔","🍕"];
+async function registrarAccion(id){
 
+    const nombre = localStorage.getItem("nombreAlumno");
+    const avatar = localStorage.getItem("avatarSeleccionado");
+
+    let accion = "";
+
+    if(id === "audio1") accion = "Escuchó información";
+    if(id === "audio2") accion = "Escuchó importancia";
+
+    await supabase.from("actividad").insert([{
+        nombre,
+        avatar,
+        seccion:"Origen Animal",
+        accion
+    }]);
+}
+
+/* =========================
+   EMOJIS FLOTANTES
+========================= */
+
+const emojis = ["🍗","🥚","🧀","🐟","🥛","🍖","💪","⚡"];
 const fondo = document.getElementById("fondo");
 
-for(let i=0;i<60;i++){
-
+for(let i=0;i<50;i++){
     const span = document.createElement("span");
-
-    span.className = "emoji";
+    span.classList.add("emoji");
     span.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
 
-    span.style.left = Math.random()*100+"%";
-    span.style.fontSize = (20+Math.random()*40)+"px";
-    span.style.animationDuration = (8+Math.random()*10)+"s";
-    span.style.animationDelay = Math.random()*5+"s";
+    span.style.left = Math.random()*100 + "%";
+    span.style.fontSize = (20 + Math.random()*40) + "px";
+    span.style.animationDuration = (8 + Math.random()*10) + "s";
+    span.style.animationDelay = Math.random()*5 + "s";
 
     fondo.appendChild(span);
 }
