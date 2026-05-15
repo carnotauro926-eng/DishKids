@@ -16,16 +16,35 @@
 
 body{
     font-family:Arial,sans-serif;
-    overflow-x:hidden;
+    overflow:hidden;
     min-height:100vh;
 
-    background:linear-gradient(135deg,#fee2e2,#fecaca);
+    background:linear-gradient(
+        135deg,
+        #fee2e2,
+        #fecaca
+    );
 
     display:flex;
     justify-content:center;
     align-items:center;
 
     position:relative;
+}
+
+/* CAPA OSCURA SUAVE */
+
+body::after{
+    content:"";
+
+    position:fixed;
+    inset:0;
+
+    background:rgba(255,255,255,0.05);
+
+    z-index:1;
+
+    pointer-events:none;
 }
 
 /* =========================
@@ -50,17 +69,23 @@ body{
 .emoji{
     position:absolute;
 
-    bottom:-100px;
+    bottom:-120px;
 
-    opacity:0.22;
+    z-index:1;
 
-    animation:flotar linear infinite;
+    user-select:none;
 
-    filter:drop-shadow(
-        0 0 10px rgba(255,255,255,0.4)
+    animation-name:flotar;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+
+    opacity:0.30;
+
+    filter:
+    drop-shadow(
+        0 0 8px rgba(255,255,255,0.5)
     );
 }
-
 @keyframes flotar{
 
     0%{
@@ -594,14 +619,17 @@ async function guardarVisita(){
 const emojis = [
 "🍗","🥩","🥚","🐟",
 "🧀","🥛","🍖","🍤",
+"🍳","🥓","🦴","🥪",
 "💪","⚡","🍔","🌭",
-"🍳","🥓","🦴","🥪"
+"🐔","🐄","🍼","🍕"
 ];
 
 const fondo =
 document.getElementById("fondo");
 
-for(let i=0;i<55;i++){
+/* CREAR MUCHOS EMOJIS */
+
+for(let i=0;i<70;i++){
 
     const span =
     document.createElement("span");
@@ -615,22 +643,29 @@ for(let i=0;i<55;i++){
         )
     ];
 
+    /* POSICIÓN */
+
     span.style.left =
     Math.random()*100 + "%";
 
+    /* TAMAÑO */
+
     span.style.fontSize =
-    (25 + Math.random()*45) + "px";
+    (20 + Math.random()*50) + "px";
+
+    /* VELOCIDAD */
 
     span.style.animationDuration =
-    (10 + Math.random()*15) + "s";
+    (8 + Math.random()*18) + "s";
+
+    /* RETRASO */
 
     span.style.animationDelay =
-    Math.random()*8 + "s";
+    Math.random()*10 + "s";
 
     fondo.appendChild(span);
 
 }
-
 </script>
 
 </body>
