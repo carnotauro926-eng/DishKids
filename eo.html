@@ -423,39 +423,48 @@ preload="auto">
    AUDIO BIENVENIDA
 ========================= */
 
-window.addEventListener(
-"DOMContentLoaded",
-() => {
-
 const audio =
 document.getElementById(
 "audioBienvenida"
 );
 
-/* INTENTAR AUTOMÁTICO */
+/* REPRODUCIR AL PRIMER CLICK */
 
-audio.play().catch(() => {
+function iniciarAudio(){
 
-console.log(
-"Autoplay bloqueado"
-);
+    audio.volume = 1;
 
-/* PRIMER CLICK */
+    audio.play()
+    .then(()=>{
 
-document.body.addEventListener(
+        console.log(
+        "Audio funcionando"
+        );
+
+    })
+    .catch(error=>{
+
+        console.log(error);
+
+    });
+
+}
+
+/* COMPUTADORA */
+
+document.addEventListener(
 "click",
-() => {
-
-audio.play();
-
-},
+iniciarAudio,
 { once:true }
 );
 
-});
+/* CELULAR */
 
-});
-
+document.addEventListener(
+"touchstart",
+iniciarAudio,
+{ once:true }
+);
 /* =========================
    SUPABASE
 ========================= */
