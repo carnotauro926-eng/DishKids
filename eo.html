@@ -24,6 +24,8 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
+
+    position:relative;
 }
 
 /* FONDO ANIMADO */
@@ -33,14 +35,17 @@ body::before{
     position:absolute;
     width:200%;
     height:200%;
+
     background:
     radial-gradient(circle,#ffffff55 10%,transparent 10%);
+
     background-size:80px 80px;
 
     animation:moverFondo 20s linear infinite;
 }
 
 @keyframes moverFondo{
+
     from{
         transform:translate(0,0);
     }
@@ -48,6 +53,7 @@ body::before{
     to{
         transform:translate(-200px,-200px);
     }
+
 }
 
 /* CONTENEDOR */
@@ -68,38 +74,51 @@ body::before{
 }
 
 @keyframes entrada{
+
     from{
         opacity:0;
-        transform:translateY(50px) scale(0.9);
+        transform:
+        translateY(50px)
+        scale(0.9);
     }
 
     to{
         opacity:1;
-        transform:translateY(0) scale(1);
+        transform:
+        translateY(0)
+        scale(1);
     }
+
 }
 
 /* AVATAR */
 
 .avatarBox{
-    position:absolute;
+    position:fixed;
+
     top:20px;
     left:20px;
 
+    z-index:9999;
+
     background:white;
+
     padding:15px 20px;
+
     border-radius:20px;
 
     display:flex;
     align-items:center;
-    gap:12px;
+    justify-content:center;
 
-    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    box-shadow:
+    0 8px 20px rgba(0,0,0,0.15);
 
     animation:avatarEntrada 1s ease;
 }
 
 @keyframes avatarEntrada{
+
     from{
         opacity:0;
         transform:translateX(-50px);
@@ -109,19 +128,14 @@ body::before{
         opacity:1;
         transform:translateX(0);
     }
+
 }
 
 .avatarEmoji{
     font-size:55px;
 }
 
-.avatarTexto{
-    font-size:20px;
-    color:#5c4630;
-    font-weight:bold;
-}
-
-/* SECCIÓN CENTRAL */
+/* ESCENA */
 
 .escena{
     width:100%;
@@ -129,9 +143,9 @@ body::before{
     display:flex;
     justify-content:center;
     align-items:center;
+
     gap:40px;
 
-    margin-top:80px;
     margin-bottom:50px;
 }
 
@@ -139,77 +153,46 @@ body::before{
 
 video{
     width:260px;
+
     border-radius:30px;
 
-    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.2);
 
-    animation:flotar 3s ease-in-out infinite;
+    animation:
+    flotar 3s ease-in-out infinite;
 }
 
-/* TÍTULO */
-
-.titulo{
-    position:absolute;
-    top:20px;
-    left:50%;
-
-    transform:translateX(-50%);
-
-    font-size:50px;
-    color:#5c4630;
-
-    font-weight:bold;
-
-    text-align:center;
-
-    text-shadow:
-    3px 3px 8px rgba(0,0,0,0.2);
-
-    z-index:2;
-
-    animation:entradaTitulo 1s ease;
-}
-
-@keyframes entradaTitulo{
-
-    from{
-        opacity:0;
-        transform:
-        translateX(-50%)
-        translateY(-30px);
-    }
-
-    to{
-        opacity:1;
-        transform:
-        translateX(-50%)
-        translateY(0);
-    }
-
-}
-
-/* PLATO MÁS GRANDE */
+/* PLATO */
 
 .plato{
-    width:550px;
+    width:580px;
 
     animation:
     entradaPlato 1.2s ease,
     girar 6s linear infinite;
 }
+
 @keyframes entradaPlato{
+
     from{
         opacity:0;
-        transform:scale(0.5) rotate(-180deg);
+        transform:
+        scale(0.5)
+        rotate(-180deg);
     }
 
     to{
         opacity:1;
-        transform:scale(1) rotate(0deg);
+        transform:
+        scale(1)
+        rotate(0deg);
     }
+
 }
 
 @keyframes girar{
+
     0%{
         transform:rotate(0deg);
     }
@@ -217,9 +200,11 @@ video{
     100%{
         transform:rotate(360deg);
     }
+
 }
 
 @keyframes flotar{
+
     0%{
         transform:translateY(0px);
     }
@@ -231,18 +216,23 @@ video{
     100%{
         transform:translateY(0px);
     }
+
 }
 
 /* BOTONES */
 
 .botones{
     display:grid;
-    grid-template-columns:repeat(2,250px);
+
+    grid-template-columns:
+    repeat(2,250px);
+
     gap:25px;
 }
 
 button{
     padding:22px;
+
     border:none;
     border-radius:25px;
 
@@ -255,12 +245,14 @@ button{
 
     transition:0.35s;
 
-    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+    box-shadow:
+    0 8px 20px rgba(0,0,0,0.2);
 
     animation:botonEntrada 1s ease;
 }
 
 @keyframes botonEntrada{
+
     from{
         opacity:0;
         transform:translateY(40px);
@@ -270,6 +262,7 @@ button{
         opacity:1;
         transform:translateY(0);
     }
+
 }
 
 button:hover{
@@ -322,13 +315,9 @@ button:hover{
         width:220px;
     }
 
-.plato{
-    width:450px;
-
-    animation:
-    entradaPlato 1.2s ease,
-    girar 6s linear infinite;
-}
+    .plato{
+        width:420px;
+    }
 
     .botones{
         grid-template-columns:1fr;
@@ -345,7 +334,8 @@ button:hover{
 </head>
 
 <body>
-    <!-- AUDIO DE BIENVENIDA -->
+
+<!-- AUDIO -->
 <audio
 id="audioBienvenida"
 src="Audio_bienvenida.mp3"
@@ -355,14 +345,12 @@ preload="auto">
 <!-- AVATAR -->
 <div class="avatarBox">
 
-    <div class="avatarEmoji" id="avatar"></div>
+    <div
+    class="avatarEmoji"
+    id="avatar">
+    </div>
 
 </div>
-
-<!-- TÍTULO -->
-<h1 class="titulo">
-    🍽️ Plato del Buen Comer 🍽️
-</h1>
 
 <!-- CONTENIDO -->
 <div class="contenedor">
@@ -370,17 +358,23 @@ preload="auto">
     <!-- ESCENA -->
     <div class="escena">
 
-        <!-- VIDEO IZQUIERDO -->
+        <!-- VIDEO -->
         <video autoplay muted loop>
-            <source src="chicavideo.mp4" type="video/mp4">
+            <source
+            src="chicavideo.mp4"
+            type="video/mp4">
         </video>
 
         <!-- PLATO -->
-        <img src="Plato.png.png" class="plato">
+        <img
+        src="Plato.png.png"
+        class="plato">
 
-        <!-- VIDEO DERECHO -->
+        <!-- VIDEO -->
         <video autoplay muted loop>
-            <source src="chicovideo.mp4" type="video/mp4">
+            <source
+            src="chicovideo.mp4"
+            type="video/mp4">
         </video>
 
     </div>
@@ -389,22 +383,30 @@ preload="auto">
     <div class="botones">
 
         <button class="verduras"
-        onclick="window.location.href='verdurasyfrutas.html'">
+        onclick="
+        window.location.href=
+        'verdurasyfrutas.html'">
             🥦 Verduras y Frutas
         </button>
 
         <button class="cereales"
-        onclick="window.location.href='cereales.html'">
+        onclick="
+        window.location.href=
+        'cereales.html'">
             🌾 Cereales
         </button>
 
         <button class="leguminosas"
-        onclick="window.location.href='leguminosas.html'">
+        onclick="
+        window.location.href=
+        'leguminosas.html'">
             🫘 Leguminosas
         </button>
 
         <button class="animal"
-        onclick="window.location.href='origenanimal.html'">
+        onclick="
+        window.location.href=
+        'origenanimal.html'">
             🍗 Origen Animal
         </button>
 
@@ -412,20 +414,17 @@ preload="auto">
 
 </div>
 
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    
+
 <script>
 
-    /* =========================
-   AUDIO AUTOMÁTICO
-========================= */
-
 /* =========================
-   AUDIO DE BIENVENIDA
+   AUDIO BIENVENIDA
 ========================= */
 
 window.addEventListener(
-"load",
+"DOMContentLoaded",
 () => {
 
 const audio =
@@ -433,59 +432,42 @@ document.getElementById(
 "audioBienvenida"
 );
 
-/* INTENTAR REPRODUCIR */
+/* INTENTAR AUTOMÁTICO */
 
-const reproducir = () => {
-
-audio.volume = 1;
-
-audio.play()
-.then(()=>{
+audio.play().catch(() => {
 
 console.log(
-"Audio reproducido"
+"Autoplay bloqueado"
 );
 
-})
-.catch(error=>{
-
-console.log(
-"No se pudo reproducir:",
-error
-);
-
-});
-
-};
-
-/* REPRODUCIR */
-
-reproducir();
-
-/* SI EL NAVEGADOR BLOQUEA,
-   SE REPRODUCE AL PRIMER CLICK */
+/* PRIMER CLICK */
 
 document.body.addEventListener(
 "click",
 () => {
 
-reproducir();
+audio.play();
 
 },
 { once:true }
 );
 
-}
-);
+});
+
+});
 
 /* =========================
-   CONFIGURAR SUPABASE
+   SUPABASE
 ========================= */
 
-const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
-const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV"
+const _supabaseUrl =
+"https://jxdlneupjqlyxanydzdl.supabase.co";
 
-const supabase = window.supabase.createClient(
+const _supabaseKey =
+"sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
+
+const supabase =
+window.supabase.createClient(
     _supabaseUrl,
     _supabaseKey
 );
@@ -495,14 +477,19 @@ const supabase = window.supabase.createClient(
 ========================= */
 
 const avatarGuardado =
-localStorage.getItem("avatarSeleccionado");
+localStorage.getItem(
+"avatarSeleccionado"
+);
 
 const avatar =
-document.getElementById("avatar");
+document.getElementById(
+"avatar"
+);
 
 if(avatarGuardado){
 
-    avatar.innerHTML = avatarGuardado;
+    avatar.innerHTML =
+    avatarGuardado;
 
 }else{
 
@@ -511,47 +498,45 @@ if(avatarGuardado){
 }
 
 /* =========================
-   GUARDAR EN SUPABASE
+   GUARDAR USUARIO
 ========================= */
 
 async function guardarUsuario(){
 
-    const nombre =
-    localStorage.getItem("nombreAlumno");
+const nombre =
+localStorage.getItem(
+"nombreAlumno"
+);
 
-    const avatarSeleccionado =
-    localStorage.getItem("avatarSeleccionado");
+const avatarSeleccionado =
+localStorage.getItem(
+"avatarSeleccionado"
+);
 
-    if(!nombre || !avatarSeleccionado){
+if(!nombre ||
+!avatarSeleccionado){
 
-        console.log("Faltan datos");
-
-        return;
-    }
-
-    const { data, error } =
-    await supabase
-    .from("usuarios")
-    .insert([
-        {
-            nombre:nombre,
-            avatar:avatarSeleccionado
-        }
-    ]);
-
-    if(error){
-
-        console.log("Error:",error);
-
-    }else{
-
-        console.log("Usuario guardado");
-
-    }
+return;
 
 }
 
-/* EJECUTAR */
+const { error } =
+await supabase
+.from("usuarios")
+.insert([
+{
+nombre:nombre,
+avatar:avatarSeleccionado
+}
+]);
+
+if(error){
+
+console.log(error);
+
+}
+
+}
 
 guardarUsuario();
 
