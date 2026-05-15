@@ -372,6 +372,11 @@ button:hover{
     <!-- BOTONES -->
     <div class="botones">
 
+        <button class="menu"
+        onclick="window.location.href='eo.html'">
+            🏠 Menú Principal
+        </button>
+
         <button class="verduras"
         onclick="window.location.href='verdurasyfrutas.html'">
             🥦 Verduras y Frutas
@@ -391,22 +396,7 @@ button:hover{
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-    <script>
-
-/* =========================
-   CONFIGURAR SUPABASE
-========================= */
-
-const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
-const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV"
-
-const supabase =
-window.supabase.createClient(
-    _supabaseUrl,
-    _supabaseKey
-);
+<script>
 
 /* =========================
    AUDIO AUTOMÁTICO
@@ -418,8 +408,6 @@ window.onload = function(){
     document.getElementById("audioInicio");
 
     audio.play().catch(()=>{});
-
-    guardarVisita();
 
 };
 
@@ -435,8 +423,7 @@ document.getElementById("avatar");
 
 if(avatarGuardado){
 
-    avatar.innerHTML =
-    avatarGuardado;
+    avatar.innerHTML = avatarGuardado;
 
 }else{
 
@@ -448,7 +435,7 @@ if(avatarGuardado){
    REPRODUCIR AUDIOS
 ========================= */
 
-async function reproducirAudio(id){
+function reproducirAudio(id){
 
     const audio =
     document.getElementById(id);
@@ -456,80 +443,6 @@ async function reproducirAudio(id){
     audio.currentTime = 0;
 
     audio.play();
-
-    /* GUARDAR EVENTO EN SUPABASE */
-
-    const nombre =
-    localStorage.getItem("nombreAlumno");
-
-    const avatarUsuario =
-    localStorage.getItem("avatarSeleccionado");
-
-    let descripcion = "";
-
-    if(id === "audio1"){
-
-        descripcion =
-        "Escuchó información de cereales";
-
-    }
-
-    if(id === "audio2"){
-
-        descripcion =
-        "Escuchó importancia de cereales";
-
-    }
-
-    const { error } =
-    await supabase
-    .from("actividad")
-    .insert([
-        {
-            nombre:nombre,
-            avatar:avatarUsuario,
-            seccion:"Cereales",
-            accion:descripcion
-        }
-    ]);
-
-    if(error){
-
-        console.log(error);
-
-    }
-
-}
-
-/* =========================
-   GUARDAR VISITA
-========================= */
-
-async function guardarVisita(){
-
-    const nombre =
-    localStorage.getItem("nombreAlumno");
-
-    const avatarUsuario =
-    localStorage.getItem("avatarSeleccionado");
-
-    const { error } =
-    await supabase
-    .from("actividad")
-    .insert([
-        {
-            nombre:nombre,
-            avatar:avatarUsuario,
-            seccion:"Cereales",
-            accion:"Entró a la sección Cereales"
-        }
-    ]);
-
-    if(error){
-
-        console.log(error);
-
-    }
 
 }
 
@@ -554,9 +467,7 @@ for(let i=0;i<40;i++){
     span.classList.add("emoji");
 
     span.innerHTML =
-    emojis[Math.floor(
-        Math.random()*emojis.length
-    )];
+    emojis[Math.floor(Math.random()*emojis.length)];
 
     span.style.left =
     Math.random()*100 + "%";
@@ -573,7 +484,8 @@ for(let i=0;i<40;i++){
     fondo.appendChild(span);
 
 }
-        </script>
-    
+
+</script>
+
 </body>
 </html>
