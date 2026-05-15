@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DishKids</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    overflow-x:hidden;
+    min-height:100vh;
+
+    background:linear-gradient(135deg,#fee2e2,#fecaca);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    position:relative;
+}
+
+/* =========================
+   FONDO ANIMADO
+========================= */
+
+.fondo{
+    position:fixed;
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
+
+    z-index:0;
+
+    pointer-events:none;
+}
+
+.emoji{
+    position:absolute;
+
+    bottom:-100px;
+
+    opacity:0.22;
+
+    animation:flotar linear infinite;
+
+    filter:drop-shadow(
+        0 0 10px rgba(255,255,255,0.4)
+    );
+}
+
+@keyframes flotar{
+
+    0%{
+        transform:
+        translateY(0)
+        rotate(0deg)
+        scale(0.7);
+
+        opacity:0;
+    }
+
+    10%{
+        opacity:0.25;
+    }
+
+    50%{
+        transform:
+        translateY(-50vh)
+        rotate(180deg)
+        scale(1);
+    }
+
+    100%{
+        transform:
+        translateY(-130vh)
+        rotate(360deg)
+        scale(1.2);
+
+        opacity:0;
+    }
+
+}
+
+/* CONTENEDOR */
+
+.contenedor{
+    position:relative;
+    z-index:2;
+
+    width:95%;
+    max-width:1200px;
+
+    padding:30px;
+
+    animation:entrada 1s ease;
+}
+
+@keyframes entrada{
+
+    from{
+        opacity:0;
+        transform:translateY(50px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* AVATAR */
+
+.avatarBox{
+    position:absolute;
+    top:20px;
+    left:20px;
+
+    background:white;
+    padding:15px 20px;
+
+    border-radius:20px;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+
+    animation:avatarEntrada 1s ease;
+}
+
+@keyframes avatarEntrada{
+
+    from{
+        opacity:0;
+        transform:translateX(-40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+
+}
+
+.avatarEmoji{
+    font-size:50px;
+}
+
+.avatarTexto{
+    font-size:20px;
+    font-weight:bold;
+    color:#991b1b;
+}
+
+/* TITULO */
+
+h1{
+    text-align:center;
+    font-size:50px;
+    color:#991b1b;
+
+    margin-top:60px;
+    margin-bottom:50px;
+
+    animation:titulo 1s ease;
+}
+
+@keyframes titulo{
+
+    from{
+        opacity:0;
+        transform:scale(0.5);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+
+}
+
+/* TARJETAS */
+
+.tarjetas{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(300px,1fr));
+
+    gap:30px;
+}
+
+.tarjeta{
+    background:white;
+
+    border-radius:30px;
+
+    padding:35px;
+
+    cursor:pointer;
+
+    transition:0.4s;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.15);
+
+    text-align:center;
+
+    animation:tarjetaEntrada 1.2s ease;
+}
+
+@keyframes tarjetaEntrada{
+
+    from{
+        opacity:0;
+        transform:translateY(60px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+.tarjeta:hover{
+    transform:scale(1.05) rotate(1deg);
+    background:#fef2f2;
+}
+
+.icono{
+    font-size:80px;
+    margin-bottom:20px;
+
+    animation:rebote 2s infinite;
+}
+
+@keyframes rebote{
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
+}
+
+.tarjeta p{
+    font-size:24px;
+    line-height:1.6;
+    color:#7f1d1d;
+}
+
+/* BOTONES */
+
+.botones{
+    margin-top:60px;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+button{
+    padding:20px;
+
+    border:none;
+    border-radius:25px;
+
+    font-size:20px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    color:white;
+
+    transition:0.3s;
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,0.15);
+}
+
+button:hover{
+    transform:scale(1.08);
+}
+
+.siguiente{
+    background:#2563eb;
+}
+
+.verduras{
+    background:#22c55e;
+}
+
+.cereales{
+    background:#f59e0b;
+}
+
+.leguminosas{
+    background:#8b5cf6;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+    h1{
+        font-size:36px;
+    }
+
+    .tarjeta p{
+        font-size:20px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<!-- AUDIO DE ENTRADA -->
+<audio id="audioInicio" src="Seccionanimal.mp3"></audio>
+
+<!-- AUDIO TARJETA 1 -->
+<audio id="audio1" src="Origenanimal.mp3"></audio>
+
+<!-- AUDIO TARJETA 2 -->
+<audio id="audio2"
+src="Importanciaorigenanimal.mp3"></audio>
+
+<!-- FONDO -->
+<div class="fondo" id="fondo"></div>
+
+<!-- AVATAR -->
+<div class="avatarBox">
+
+    <div class="avatarEmoji" id="avatar"></div>
+
+    <div class="avatarTexto">
+        Tu Avatar
+    </div>
+
+</div>
+
+<!-- CONTENIDO -->
+<div class="contenedor">
+
+    <h1>
+        🍗 Origen Animal 🥚
+    </h1>
+
+    <!-- TARJETAS -->
+    <div class="tarjetas">
+
+        <!-- TARJETA 1 -->
+        <div class="tarjeta"
+        onclick="reproducirAudio('audio1')">
+
+            <div class="icono">
+                🍗🥚🧀🐟🥛
+            </div>
+
+            <p>
+                Incluye carne,
+                pollo, pescado,
+                huevo, leche,
+                queso y yogur.
+            </p>
+
+        </div>
+
+        <!-- TARJETA 2 -->
+        <div class="tarjeta"
+        onclick="reproducirAudio('audio2')">
+
+            <div class="icono">
+                💪🥩⚡🧀🥚
+            </div>
+
+            <p>
+                Estos alimentos ayudan
+                a que nuestro cuerpo
+                crezca fuerte porque
+                tienen proteínas y vitaminas.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- BOTONES -->
+    <div class="botones">
+
+        <button class="verduras"
+        onclick="window.location.href='verdurasyfrutas.html'">
+            🥦 Verduras y Frutas
+        </button>
+
+        <button class="cereales"
+        onclick="window.location.href='cereales.html'">
+            🌾 Cereales
+        </button>
+
+        <button class="leguminosas"
+        onclick="window.location.href='leguminosas.html'">
+            🫘 Leguminosas
+        </button>
+
+        <button class="siguiente"
+        onclick="window.location.href='Historia.html'">
+            ➡️ Sigue Adelante
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* =========================
+   CONFIGURAR SUPABASE
+========================= */
+
+const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
+const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV"
+
+const supabase =
+window.supabase.createClient(
+    _supabaseUrl,
+    _supabaseKey
+);
+
+/* =========================
+   AUDIO AUTOMÁTICO
+========================= */
+
+window.onload = function(){
+
+    const audio =
+    document.getElementById("audioInicio");
+
+    audio.play().catch(()=>{});
+
+    guardarVisita();
+
+};
+
+/* =========================
+   AVATAR
+========================= */
+
+const avatarGuardado =
+localStorage.getItem(
+    "avatarSeleccionado"
+);
+
+const avatar =
+document.getElementById("avatar");
+
+if(avatarGuardado){
+
+    avatar.innerHTML =
+    avatarGuardado;
+
+}else{
+
+    avatar.innerHTML = "🙂";
+
+}
+
+/* =========================
+   REPRODUCIR AUDIOS
+========================= */
+
+async function reproducirAudio(id){
+
+    const audio =
+    document.getElementById(id);
+
+    audio.currentTime = 0;
+
+    audio.play();
+
+    const nombre =
+    localStorage.getItem("nombreAlumno");
+
+    const avatarUsuario =
+    localStorage.getItem(
+        "avatarSeleccionado"
+    );
+
+    let descripcion = "";
+
+    if(id === "audio1"){
+
+        descripcion =
+        "Escuchó información de origen animal";
+
+    }
+
+    if(id === "audio2"){
+
+        descripcion =
+        "Escuchó importancia de origen animal";
+
+    }
+
+    const { error } =
+    await supabase
+    .from("actividad")
+    .insert([
+        {
+            nombre:nombre,
+            avatar:avatarUsuario,
+            seccion:"Origen Animal",
+            accion:descripcion
+        }
+    ]);
+
+    if(error){
+
+        console.log(error);
+
+    }
+
+}
+
+/* =========================
+   GUARDAR VISITA
+========================= */
+
+async function guardarVisita(){
+
+    const nombre =
+    localStorage.getItem("nombreAlumno");
+
+    const avatarUsuario =
+    localStorage.getItem(
+        "avatarSeleccionado"
+    );
+
+    const { error } =
+    await supabase
+    .from("actividad")
+    .insert([
+        {
+            nombre:nombre,
+            avatar:avatarUsuario,
+            seccion:"Origen Animal",
+            accion:
+            "Entró a la sección Origen Animal"
+        }
+    ]);
+
+    if(error){
+
+        console.log(error);
+
+    }
+
+}
+
+/* =========================
+   EMOJIS FLOTANTES
+========================= */
+
+const emojis = [
+"🍗","🥩","🥚","🐟",
+"🧀","🥛","🍖","🍤",
+"💪","⚡","🍔","🌭",
+"🍳","🥓","🦴","🥪"
+];
+
+const fondo =
+document.getElementById("fondo");
+
+for(let i=0;i<55;i++){
+
+    const span =
+    document.createElement("span");
+
+    span.classList.add("emoji");
+
+    span.innerHTML =
+    emojis[
+        Math.floor(
+            Math.random()*emojis.length
+        )
+    ];
+
+    span.style.left =
+    Math.random()*100 + "%";
+
+    span.style.fontSize =
+    (25 + Math.random()*45) + "px";
+
+    span.style.animationDuration =
+    (10 + Math.random()*15) + "s";
+
+    span.style.animationDelay =
+    Math.random()*8 + "s";
+
+    fondo.appendChild(span);
+
+}
+
+</script>
+
+</body>
+</html>
