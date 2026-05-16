@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Encuentra el Intruso</title>
+
+<style>
+body{
+    font-family:"Comic Sans MS";
+    background:#ffd6b0;
+    margin:0;
+    padding:15px;
+    overflow:hidden;
+}
+
+#top{
+    display:flex;
+    justify-content:space-between;
+    font-size:20px;
+    padding:0 40px;
+}
+
+h1{
+    text-align:center;
+    color:#e67e22;
+    font-size:40px;
+    margin:5px;
+}
+
+button{
+    margin:4px;
+    padding:8px 16px;
+    font-size:17px;
+    background:#ffa559;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+button:hover{background:#ff8c42;}
+
+#progresoContenedor{
+    width:200px;
+    height:12px;
+    background:#fff;
+    border-radius:10px;
+    overflow:hidden;
+    margin-top:5px;
+}
+
+#progreso{
+    height:100%;
+    width:0%;
+    background:#e67e22;
+    transition:.3s;
+}
+
+#juego{
+    display:grid;
+    justify-content:center;
+    gap:18px;
+    margin-top:5px;
+}
+
+.tarjeta{
+    width:140px;
+    height:140px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:65px;
+    border-radius:20px;
+    cursor:pointer;
+    box-shadow:0 6px 12px rgba(0,0,0,.2);
+    transition: transform 0.2s;
+}
+
+.tarjeta:active{ transform: scale(0.9); }
+
+.color1{background:#ffadad;} .color2{background:#ffd6a5;} .color3{background:#fdffb6;}
+.color4{background:#caffbf;} .color5{background:#9bf6ff;} .color6{background:#a0c4ff;}
+.color7{background:#bdb2ff;} .color8{background:#ffc6ff;}
+
+.correcto{background:#8ef58e !important;}
+.incorrecto{background:#ff8e8e !important;}
+
+#mensaje{
+    margin-top:5px;
+    font-size:22px;
+    text-align:center;
+    height: 30px;
+}
+
+#pantallaFinal{
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    width:320px;
+    text-align:center;
+    box-shadow:0 0 20px rgba(0,0,0,.3);
+    z-index: 1000;
+}
+
+#volver{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    padding:10px 18px;
+    font-size:14px;
+    background:#e67e22;
+    color:white;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+}
+
+#instructivo{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+#cajaInstructivo{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    width:350px;
+    text-align:center;
+}
+
+.avatar-esquina{
+    position:fixed;
+    top:15px;
+    right:15px;
+    font-size:50px;
+    background:#fff;
+    border-radius:50%;
+    padding:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    z-index:9999;
+    opacity:0;
+    transform:scale(0.3) rotate(-180deg);
+    animation:entradaAvatar 0.8s ease-out forwards;
+}
+
+@keyframes entradaAvatar{ to{ opacity:1; transform:scale(1) rotate(0deg); } }
+</style>
+</head>
+
+<body>
+
+<div id="avatarUsuario" class="avatar-esquina"></div>
+
+<audio id="audioInstructivo" src="instruc-intruso.mp3"></audio>
+
+<div id="instructivo">
+    <div id="cajaInstructivo">
+        <h2>🎮 ¿Cómo jugar?</h2>
+        <p>
+            Observa todos los alimentos 👀<br><br>
+            Encuentra el que NO pertenece ❌<br><br>
+            Haz clic sobre el intruso 🖱️<br><br>
+            ¡Gana puntos y completa las rondas! 🎯
+        </p>
+        <button onclick="cerrarInstructivo()">Jugar ▶️</button>
+    </div>
+</div>
+
+<h1>Encuentra el intruso</h1>
+
+<div id="top">
+    <div><p><b>Nivel:</b> <span id="nivelActual">-</span></p></div>
+    <div>
+        <p>Puntos: <span id="puntos">0</span> | Ronda: <span id="ronda">0</span> / 5</p>
+        <div id="progresoContenedor"><div id="progreso"></div></div>
+    </div>
+</div>
+
+<div id="juego"></div>
+<div id="mensaje"></div>
+
+<div id="pantallaFinal">
+    <h2>🎉 ¡Excelente trabajo!</h2>
+    <p>Puntaje final:</p>
+    <h2 id="puntosFinal"></h2>
+    <button onclick="reiniciarJuego()">Jugar otra vez</button>
+</div>
+
+<button id="volver" onclick="window.location.href='entradajuegos.html'">⬅ Volver</button>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* =========================
+   CONFIGURACIÓN SUPABASE
+========================= */
+const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
+const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
+const supabaseClient = supabase.createClient(_supabaseUrl, _supabaseKey);
+
+async function registrarAvance(puntos) {
+    const nombre = localStorage.getItem("nombreAlumno");
+    if (!nombre) return;
+
+    const { data: alumno } = await supabaseClient
+        .from('alumnos')
+        .select('id')
+        .eq('nombre_alumno', nombre)
+        .single();
+
+    if (alumno) {
+        await supabaseClient.from('progreso').upsert({
+            id_alumno: alumno.id,
+            archivo: "Juego Encuentra al Intruso",
+            porcentaje: puntos,
+            completado: true,
+            fecha: new Date().toISOString()
+        }, { onConflict: 'id_alumno, archivo' });
+    }
+}
+
+/* =========================
+   VARIABLES GLOBALES
+========================= */
+let niveles = ["facil", "medio", "dificil"];
+let nivelIndex = 0;
+let cantidad = 4, ronda = 0, rondasMax = 5, puntos = 0, intrusoActual = "";
+const colores = ["color1", "color2", "color3", "color4", "color5", "color6", "color7", "color8"];
+
+const grupos = {
+    frutas: ["🍎", "🍓", "🍉", "🍇", " Pineapple", "🥭", "🥑", "🍅", "🍒", "🍐", "🥝", "🍌"],
+    cereales: ["🌽", "🍞", "🍚", "🥖", "🥨", "🥞", "🥐", "🌮", "🍘", "🫓"],
+    leguminosas: ["🫘", " Peanut", "🫛", "🌱", "🧆", "🌰"],
+    animal: ["🥚", "🍗", "🐟", "🧀", "🥛", "🍤", "🍖", "🍳", "🦐"]
+};
+
+// Referencias
+const juego = document.getElementById("juego");
+const mensaje = document.getElementById("mensaje");
+const progreso = document.getElementById("progreso");
+const nivelActualLabel = document.getElementById("nivelActual");
+const audioInstructivo = document.getElementById("audioInstructivo");
+const clickAudio = new Audio("click.mp3");
+
+// Avatar
+const avatar = localStorage.getItem('avatarElegido') || localStorage.getItem('avatarSeleccionado');
+if(avatar) document.getElementById("avatarUsuario").innerText = avatar;
+
+/* =========================
+   LÓGICA DEL JUEGO
+========================= */
+function clickSound() { 
+    let s = clickAudio.cloneNode(); 
+    s.play().catch(()=>{}); 
+}
+
+function aplicarNivel(n) {
+    if (n === "facil") cantidad = 4;
+    else if (n === "medio") cantidad = 6;
+    else if (n === "dificil") cantidad = 8;
+
+    nivelActualLabel.innerText = n.charAt(0).toUpperCase() + n.slice(1);
+    ronda = 0;
+    puntos = 0;
+    document.getElementById("puntos").innerText = 0;
+    progreso.style.width = "0%";
+    siguienteRonda();
+}
+
+function cerrarInstructivo() {
+    document.getElementById("instructivo").style.display = "none";
+    audioInstructivo.pause();
+    nivelIndex = 0;
+    aplicarNivel(niveles[nivelIndex]);
+}
+
+function obtenerElementos(arr, cant) {
+    let mezclado = [...arr].sort(() => Math.random() - 0.5);
+    return mezclado.slice(0, cant);
+}
+
+function siguienteRonda() {
+    if (ronda >= rondasMax) {
+        if (nivelIndex < niveles.length - 1) {
+            nivelIndex++;
+            setTimeout(() => aplicarNivel(niveles[nivelIndex]), 1000);
+            return;
+        }
+        mostrarPantallaFinal();
+        return;
+    }
+
+    ronda++;
+    document.getElementById("ronda").innerText = ronda;
+    progreso.style.width = (ronda / rondasMax) * 100 + "%";
+
+    let categorias = Object.keys(grupos);
+    let grupoCorrecto = categorias[Math.floor(Math.random() * categorias.length)];
+    let grupoIntruso = categorias.filter(g => g !== grupoCorrecto)[Math.floor(Math.random() * (categorias.length - 1))];
+
+    let correctos = obtenerElementos(grupos[grupoCorrecto], cantidad - 1);
+    intrusoActual = obtenerElementos(grupos[grupoIntruso], 1)[0];
+
+    let lista = [...correctos, intrusoActual].sort(() => Math.random() - 0.5);
+    let coloresRonda = [...colores].sort(() => Math.random() - 0.5).slice(0, cantidad);
+
+    juego.innerHTML = "";
+    let columnas = cantidad === 4 ? 2 : cantidad === 6 ? 3 : 4;
+    juego.style.gridTemplateColumns = `repeat(${columnas}, 140px)`;
+
+    lista.forEach((alimento, i) => {
+        let div = document.createElement("div");
+        div.className = "tarjeta " + coloresRonda[i];
+        div.innerHTML = alimento;
+        div.onclick = () => verificar(alimento, div);
+        juego.appendChild(div);
+    });
+}
+
+function verificar(alimento, el) {
+    if (alimento === intrusoActual) {
+        clickSound();
+        el.classList.add("correcto");
+        puntos += 10;
+        document.getElementById("puntos").innerText = puntos;
+        mensaje.innerText = "¡Correcto! 🎉";
+
+        // Registrar en Supabase
+        registrarAvance(puntos);
+
+        setTimeout(() => {
+            mensaje.innerText = "";
+            siguienteRonda();
+        }, 800);
+    } else {
+        el.classList.add("incorrecto");
+        mensaje.innerText = "Ese no es ❌";
+        setTimeout(() => el.classList.remove("incorrecto"), 500);
+    }
+}
+
+function mostrarPantallaFinal() {
+    juego.style.display = "none";
+    document.getElementById("pantallaFinal").style.display = "block";
+    document.getElementById("puntosFinal").innerText = puntos + " puntos";
+}
+
+function reiniciarJuego() { location.reload(); }
+
+// Audio inicial
+document.addEventListener("mousedown", () => {
+    audioInstructivo.play().catch(()=>{});
+}, { once: true });
+
+</script>
+</body>
+</html>
