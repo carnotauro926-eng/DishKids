@@ -293,9 +293,9 @@ let cantidad = 0, columnas = 4, puntos = 0, total = 0;
 let elementoActual = null;
 
 const alimentos = [
-    {emoji:"🍎",grupo:"frutas"},{emoji:"🍓",grupo:"frutas"},{emoji:"🥦",grupo:"frutas"},{emoji:"🥕",grupo:"frutas"},{emoji:" Pineapple",grupo:"frutas"},{emoji:"🍇",grupo:"frutas"},{emoji:"🍉",grupo:"frutas"},
+    {emoji:"🍎",grupo:"frutas"},{emoji:"🍓",grupo:"frutas"},{emoji:"🥦",grupo:"frutas"},{emoji:"🥕",grupo:"frutas"},{emoji:"🍍",grupo:"frutas"},{emoji:"🍇",grupo:"frutas"},{emoji:"🍉",grupo:"frutas"},
     {emoji:"🌽",grupo:"cereales"},{emoji:"🍞",grupo:"cereales"},{emoji:"🍚",grupo:"cereales"},{emoji:"🥨",grupo:"cereales"},{emoji:"🥖",grupo:"cereales"},{emoji:"🌮",grupo:"cereales"},
-    {emoji:"🫘",grupo:"leguminosas"},{emoji:" Peanut",grupo:"leguminosas"},{emoji:"🫛",grupo:"leguminosas"},{emoji:"🌱",grupo:"leguminosas"},{emoji:"🧆",grupo:"leguminosas"},{emoji:"🥗",grupo:"leguminosas"},
+    {emoji:"🫘",grupo:"leguminosas"},{emoji:" 🥜",grupo:"leguminosas"},{emoji:"🫛",grupo:"leguminosas"},{emoji:"🌱",grupo:"leguminosas"},{emoji:"🧆",grupo:"leguminosas"},{emoji:"🥗",grupo:"leguminosas"},
     {emoji:"🥚",grupo:"animal"},{emoji:"🍗",grupo:"animal"},{emoji:"🐟",grupo:"animal"},{emoji:"🧀",grupo:"animal"},{emoji:"🥛",grupo:"animal"},{emoji:"🍖",grupo:"animal"},{emoji:"🍤",grupo:"animal"},{emoji:"🍳",grupo:"animal"}
 ];
 
@@ -422,14 +422,36 @@ document.querySelectorAll("button").forEach(btn => {
 });
 
 /* ACTIVACIÓN DE AUDIO POR INTERACCIÓN */
-let primerAudio = false;
+/* ACTIVAR AUDIO AL PRIMER MOVIMIENTO O CLICK */
+let audioActivado = false;
+
 function activarAudioEntrada() {
-    if (primerAudio) return;
-    primerAudio = true;
-    audioInstructivo.play().catch(() => {});
-    document.removeEventListener("mousedown", activarAudioEntrada);
+
+    if(audioActivado) return;
+
+    audioActivado = true;
+
+    audioInstructivo.volume = 1;
+    audioInstructivo.currentTime = 0;
+
+    audioInstructivo.play()
+    .then(() => {
+        console.log("Audio iniciado");
+    })
+    .catch(error => {
+        console.log("Error de audio:", error);
+    });
+
+    /* REMOVER EVENTOS */
+    document.removeEventListener("mousemove", activarAudioEntrada);
+    document.removeEventListener("click", activarAudioEntrada);
+    document.removeEventListener("touchstart", activarAudioEntrada);
 }
-document.addEventListener("mousedown", activarAudioEntrada);
+
+/* EVENTOS DE INTERACCIÓN */
+document.addEventListener("mousemove", activarAudioEntrada, { once:true });
+document.addEventListener("click", activarAudioEntrada, { once:true });
+document.addEventListener("touchstart", activarAudioEntrada, { once:true });
 
 </script>
 </body>
