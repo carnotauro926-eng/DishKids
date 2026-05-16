@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>DishKids</title>
+
+<style>
+
+body{
+margin:0;
+font-family: Comic Sans MS;
+background:#F5E6D3;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+height:100vh;
+overflow:hidden;
+}
+
+/* AVATAR (AHORA A LA IZQUIERDA) */
+.avatar-esquina{
+position:fixed;
+top:15px;
+left:15px;   /* 👈 CAMBIO IMPORTANTE */
+font-size:50px;
+background:#fff;
+border-radius:50%;
+padding:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+z-index:9999;
+
+opacity:0;
+transform:scale(0.3) rotate(-180deg);
+animation:entradaAvatar 0.8s ease-out forwards;
+}
+
+@keyframes entradaAvatar{
+to{
+opacity:1;
+transform:scale(1) rotate(0deg);
+}
+}
+
+/* CONTENEDOR ESTILO "MARCO" */
+.contenedor{
+background:#c3eaf6;
+padding:50px;
+border-radius:25px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+text-align:center;
+width:700px;
+
+animation:entrada 0.7s ease;
+}
+
+@keyframes entrada{
+0%{opacity:0; transform:translateY(40px) scale(0.95);}
+100%{opacity:1; transform:translateY(0px) scale(1);}
+}
+
+h1{
+margin-bottom:35px;
+font-size:38px;
+}
+
+/* BOTONES */
+.botones{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+}
+
+button{
+height:90px;
+font-size:24px;
+border:none;
+border-radius:20px;
+background:#ffcc80;
+cursor:pointer;
+transition:0.3s;
+font-weight:bold;
+}
+
+button:hover{
+background:#ffb74d;
+transform:scale(1.05);
+}
+
+button:active{
+transform:scale(0.95);
+}
+
+/* BOTÓN EXTRA */
+.boton-multimedia{
+margin-top:20px;
+width:300px;
+height:70px;
+font-size:22px;
+background:#80d8ff;
+border-radius:20px;
+cursor:pointer;
+transition:0.3s;
+font-weight:bold;
+border:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- AVATAR -->
+<div id="avatarUsuario" class="avatar-esquina"></div>
+
+<div class="contenedor animar" id="menu">
+
+<h1>🎮 Zona de juegos 🎮</h1>
+
+<div class="botones">
+
+<button class="btn" data-sound="atrapalacomida.mp3" onclick="irAtrapa()">Atrapa la comida</button>
+<button class="btn" data-sound="memorama.mp3" onclick="irMemorama()">Memorama</button>
+<button class="btn" data-sound="clasificalosalimentos.mp3" onclick="irClasifica()">Clasifica los alimentos</button>
+<button class="btn" data-sound="encuentraelintruso.mp3" onclick="irIntruso()">Encuentra el intruso</button>
+
+</div>
+
+</div>
+
+<button class="boton-multimedia btn" data-sound="audio5.mp3" onclick="irMultimedia()">
+Área de Canciones
+</button>
+
+<script>
+
+let hoverAudio = new Audio();
+hoverAudio.volume = 0.5;
+
+/* AUDIO DE BIENVENIDA */
+let welcomeAudio = new Audio("apartadojuegos.mp3");
+welcomeAudio.volume = 0.7;
+
+/* precarga de sonidos */
+const sonidos = {
+    atrapa: "atrapalacomida.mp3",
+    memorama: "memorama.mp3",
+    clasifica: "clasificalosalimentos.mp3",
+    intruso: "encuentraelintruso.mp3"
+};
+
+function playHover(src){
+    hoverAudio.pause();
+    hoverAudio.currentTime = 0;
+    hoverAudio.src = src;
+    hoverAudio.play().catch(()=>{});
+}
+
+/* ACTIVAR HOVER EN BOTONES */
+function activarHoverSonido(){
+    document.querySelectorAll(".btn").forEach(btn => {
+        btn.addEventListener("mouseenter", () => {
+            playHover(btn.dataset.sound);
+        });
+    });
+}
+
+/* INTENTAR AUDIO DE BIENVENIDA */
+function reproducirBienvenida(){
+    welcomeAudio.play().catch(() => {
+        // Si el navegador bloquea el autoplay, se activa en el primer click
+        document.body.addEventListener("click", () => {
+            welcomeAudio.play();
+        }, { once: true });
+    });
+}
+
+/* INICIALIZAR TODO */
+window.addEventListener("DOMContentLoaded", () => {
+    activarHoverSonido();
+    reproducirBienvenida();
+});
+
+</script>
+  
+</body>
+</html>
