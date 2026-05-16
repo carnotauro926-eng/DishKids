@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Despedida Saludable</title>
+
+<style>
+*{ box-sizing:border-box; }
+
+body{
+    margin:0;
+    font-family:"Comic Sans MS";
+    background:#CDEFFD;
+    color:#000;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.contenedor{
+    width:100%;
+    max-width:1300px;
+    text-align:center;
+}
+
+.animar{
+    opacity:0;
+    transform:translateY(30px);
+    animation:entrada 1s ease forwards;
+}
+
+.animar.delay1{ animation-delay:0.4s; }
+.animar.delay2{ animation-delay:0.8s; }
+.animar.delay3{ animation-delay:1.2s; }
+
+@keyframes entrada{
+    to{ opacity:1; transform:translateY(0);} 
+}
+
+h1{
+    font-size:50px;
+    margin:5px 0;
+    animation:zoom 1s ease;
+}
+
+@keyframes zoom{
+    from{transform:scale(0.6);} 
+    to{transform:scale(1);} 
+}
+
+p{
+    font-size:22px;
+    margin:10px auto;
+    max-width:800px;
+}
+
+.escena{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:40px;
+    margin:20px 0;
+}
+
+/* VIDEOS (VERTICALES COMO TU IMAGEN) */
+.video-box{
+    width:220px;
+    height:380px;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,0.25);
+    animation:flotar 2s infinite ease-in-out;
+}
+
+.video-box video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.video-box:nth-child(1){ animation-delay:0s; }
+.video-box:nth-child(3){ animation-delay:1s; }
+
+@keyframes flotar{
+    0%,100%{transform:translateY(0);} 
+    50%{transform:translateY(-10px);} 
+}
+
+/* 🔥 PLATO MUCHO MÁS GRANDE */
+.plato-img{
+    width:520px;   /* 🔥 GRANDE */
+    height:520px;
+    object-fit:contain;
+    animation:girar 8s linear infinite;
+}
+
+@keyframes girar{
+    from{transform:rotate(0deg);} 
+    to{transform:rotate(360deg);} 
+}
+
+.botones{
+    margin-top:15px;
+}
+
+button{
+    margin:10px;
+    padding:12px 22px;
+    font-size:18px;
+    border:none;
+    border-radius:15px;
+    background:#4CAF50;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.1);
+    background:#388E3C;
+}
+
+  /* AVATAR ESQUINA */
+.avatar-esquina{
+position:fixed;
+top:15px;
+left:15px;
+font-size:50px;
+background:#fff;
+border-radius:50%;
+padding:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+z-index:9999;
+
+/* ANIMACIÓN */
+opacity:0;
+transform:scale(0.3) rotate(-180deg);
+animation:entradaAvatar 0.8s ease-out forwards;
+}
+
+@keyframes entradaAvatar{
+to{
+opacity:1;
+transform:scale(1) rotate(0deg);
+}
+}
+</style>
+</head>
+
+<body>
+    <div id="avatarUsuario" class="avatar-esquina"></div>
+
+<div class="contenedor">
+
+    <h1 class="animar">¡MISIÓN COMPLETADA!</h1>
+
+    <p class="animar delay1">
+        ¡Aprendiste a comer saludable! Ahora tienes energía para jugar, correr y crecer fuerte.
+    </p>
+
+    <div class="escena animar delay2">
+
+        <!-- VIDEO IZQUIERDA -->
+        <div class="video-box">
+            <video src="Chicodespedida.mp4" autoplay loop muted></video>
+        </div>
+
+        <!-- 🔥 PLATO GRANDE -->
+        <img src="Plato.png.png" class="plato-img" alt="Plato saludable">
+
+        <!-- VIDEO DERECHA -->
+        <div class="video-box">
+            <video src="chicadespedida.mp4" autoplay loop muted></video>
+        </div>
+
+    </div>
+
+    <p class="animar delay3">
+        ¡Sigue practicando todos los días y vuelve cuando quieras!
+    </p>
+
+    <audio autoplay loop hidden>
+        <source src="adios.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="botones">
+        <button onclick="inicio()">IR AL INICIO</button>
+    </div>
+
+</div>
+
+<script>
+function inicio(){
+    window.location.href = "iniciodesesión.html";
+}
+</script>
+<script>
+/* MOSTRAR AVATAR */
+const avatar = localStorage.getItem('avatarElegido');
+if(avatar){
+document.getElementById("avatarUsuario").innerText = avatar;
+}
+</script>
+</body>
+</html>
