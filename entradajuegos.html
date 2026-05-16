@@ -132,7 +132,7 @@ border:none;
 Área de Canciones
 </button>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 /* =========================
@@ -153,19 +153,18 @@ async function registrarAvance() {
         .single();
 
     if (alumno) {
-        // Al llegar a la zona de juegos, marcamos el 100% de navegación
         await supabaseClient.from('progreso').upsert({
             id_alumno: alumno.id,
             archivo: "Zona de Juegos",
             porcentaje: 100,
-            completado: true, // Se marca como completado al entrar aquí
+            completado: true,
             fecha: new Date().toISOString()
         }, { onConflict: 'id_alumno, archivo' });
     }
 }
 
 /* =========================
-   LÓGICA EXISTENTE CORREGIDA
+   AUDIO
 ========================= */
 let hoverAudio = new Audio();
 hoverAudio.volume = 0.5;
@@ -196,7 +195,9 @@ function reproducirBienvenida(){
     });
 }
 
-/* CARGAR AVATAR */
+/* =========================
+   AVATAR
+========================= */
 function cargarAvatar() {
     const avatarGuardado = localStorage.getItem("avatarSeleccionado");
     const divAvatar = document.getElementById("avatarUsuario");
@@ -205,20 +206,39 @@ function cargarAvatar() {
     }
 }
 
-/* NAVEGACIÓN (Asegúrate de que estos nombres de archivo sean correctos) */
-function irAtrapa() { window.location.href = "atrapa.html"; }
-function irMemorama() { window.location.href = "memorama.html"; }
-function irClasifica() { window.location.href = "clasifica.html"; }
-function irIntruso() { window.location.href = "intruso.html"; }
-function irMultimedia() { window.location.href = "multimedia.html"; }
+/* =========================
+   NAVEGACIÓN (CORREGIDA)
+========================= */
+function irAtrapa(){
+    window.location.href = "atrapalacomida.html";
+}
 
-/* INICIALIZAR TODO */
+function irMemorama(){
+    window.location.href = "memorama.html";
+}
+
+function irClasifica(){
+    window.location.href = "clasificalosalimentos.html";
+}
+
+function irIntruso(){
+    window.location.href = "encuentraelintruso.html";
+}
+
+function irMultimedia(){
+    window.location.href = "multimedia.html";
+}
+
+/* =========================
+   INICIALIZACIÓN
+========================= */
 window.addEventListener("DOMContentLoaded", () => {
-    registrarAvance(); // Registro en Supabase
+    registrarAvance();
     activarHoverSonido();
     reproducirBienvenida();
     cargarAvatar();
 });
+
 </script>
   
 </body>
