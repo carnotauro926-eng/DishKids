@@ -132,22 +132,46 @@ border:none;
 Área de Canciones
 </button>
 
-<script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+/* =========================
+   CONFIGURACIÓN SUPABASE
+========================= */
+const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
+const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
+const supabaseClient = supabase.createClient(_supabaseUrl, _supabaseKey);
+
+async function registrarAvance() {
+    const nombre = localStorage.getItem("nombreAlumno");
+    if (!nombre) return;
+
+    const { data: alumno } = await supabaseClient
+        .from('alumnos')
+        .select('id')
+        .eq('nombre_alumno', nombre)
+        .single();
+
+    if (alumno) {
+        // Al llegar a la zona de juegos, marcamos el 100% de navegación
+        await supabaseClient.from('progreso').upsert({
+            id_alumno: alumno.id,
+            archivo: "Zona de Juegos",
+            porcentaje: 100,
+            completado: true, // Se marca como completado al entrar aquí
+            fecha: new Date().toISOString()
+        }, { onConflict: 'id_alumno, archivo' });
+    }
+}
+
+/* =========================
+   LÓGICA EXISTENTE CORREGIDA
+========================= */
 let hoverAudio = new Audio();
 hoverAudio.volume = 0.5;
 
-/* AUDIO DE BIENVENIDA */
 let welcomeAudio = new Audio("apartadojuegos.mp3");
 welcomeAudio.volume = 0.7;
-
-/* precarga de sonidos */
-const sonidos = {
-    atrapa: "atrapalacomida.mp3",
-    memorama: "memorama.mp3",
-    clasifica: "clasificalosalimentos.mp3",
-    intruso: "encuentraelintruso.mp3"
-};
 
 function playHover(src){
     hoverAudio.pause();
@@ -156,7 +180,6 @@ function playHover(src){
     hoverAudio.play().catch(()=>{});
 }
 
-/* ACTIVAR HOVER EN BOTONES */
 function activarHoverSonido(){
     document.querySelectorAll(".btn").forEach(btn => {
         btn.addEventListener("mouseenter", () => {
@@ -165,22 +188,37 @@ function activarHoverSonido(){
     });
 }
 
-/* INTENTAR AUDIO DE BIENVENIDA */
 function reproducirBienvenida(){
     welcomeAudio.play().catch(() => {
-        // Si el navegador bloquea el autoplay, se activa en el primer click
         document.body.addEventListener("click", () => {
             welcomeAudio.play();
         }, { once: true });
     });
 }
 
+/* CARGAR AVATAR */
+function cargarAvatar() {
+    const avatarGuardado = localStorage.getItem("avatarSeleccionado");
+    const divAvatar = document.getElementById("avatarUsuario");
+    if(divAvatar) {
+        divAvatar.innerHTML = avatarGuardado || "🙂";
+    }
+}
+
+/* NAVEGACIÓN (Asegúrate de que estos nombres de archivo sean correctos) */
+function irAtrapa() { window.location.href = "atrapa.html"; }
+function irMemorama() { window.location.href = "memorama.html"; }
+function irClasifica() { window.location.href = "clasifica.html"; }
+function irIntruso() { window.location.href = "intruso.html"; }
+function irMultimedia() { window.location.href = "multimedia.html"; }
+
 /* INICIALIZAR TODO */
 window.addEventListener("DOMContentLoaded", () => {
+    registrarAvance(); // Registro en Supabase
     activarHoverSonido();
     reproducirBienvenida();
+    cargarAvatar();
 });
-
 </script>
   
 </body>
