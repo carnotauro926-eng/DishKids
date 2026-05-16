@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Atrapa la comida saludable</title>
+
+<style>
+.avatar-esquina{
+position:fixed;
+top:15px;
+right:15px;
+font-size:50px;
+background:#fff;
+border-radius:50%;
+padding:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+z-index:9999;
+opacity:0;
+transform:scale(0.3) rotate(-180deg);
+animation:entradaAvatar 0.8s ease-out forwards;
+}
+
+@keyframes entradaAvatar{
+to{
+opacity:1;
+transform:scale(1) rotate(0deg);
+}
+}
+
+body{
+font-family:"Comic Sans MS";
+background:#fff7a2;
+margin:0;
+overflow:hidden;
+text-align:center;
+}
+
+.cloud{
+position:absolute;
+font-size:70px;
+opacity:0.7;
+animation:moveClouds 10s linear infinite;
+}
+
+@keyframes moveClouds{
+from{transform:translateX(-200px)}
+to{transform:translateX(1400px)}
+}
+
+#topBar{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+padding:10px 40px;
+}
+
+#leftTop{
+text-align:left;
+font-size:22px;
+}
+
+#rightTop{
+text-align:right;
+font-size:22px;
+}
+
+button{
+padding:12px 22px;
+margin:6px;
+border:none;
+border-radius:12px;
+background:#FFD700;
+cursor:pointer;
+font-size:18px;
+font-weight:bold;
+transition:0.2s;
+}
+
+#game{
+position:relative;
+width:950px;
+height:500px;
+margin:20px auto;
+border:6px solid #FFD700;
+border-radius:20px;
+background:#fff9d6;
+overflow:hidden;
+}
+
+#basket{
+position:absolute;
+bottom:10px;
+left:430px;
+font-size:80px;
+}
+
+.food{
+position:absolute;
+font-size:45px;
+}
+
+#score,#timer{
+font-size:26px;
+margin:6px;
+}
+
+#progressContainer{
+width:260px;
+height:25px;
+background:#ddd;
+border-radius:20px;
+overflow:hidden;
+margin-left:auto;
+}
+
+#progressBar{
+height:100%;
+width:0%;
+background:#4CAF50;
+}
+
+#message{
+font-size:24px;
+height:40px;
+}
+
+#endScreen{
+position:absolute;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+color:white;
+display:none;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+font-size:38px;
+}
+
+.confetti{
+position:fixed;
+width:10px;
+height:10px;
+top:-20px;
+animation:confettiFall linear forwards;
+}
+
+@keyframes confettiFall{
+0%{transform:translateY(0);}
+100%{transform:translateY(100vh);}
+}
+
+#instructivo{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+#cajaInstructivo{
+background:white;
+padding:25px;
+border-radius:20px;
+width:350px;
+text-align:center;
+}
+
+#backBtn{
+margin-top:10px;
+background:#4CAF50;
+color:white;
+}
+</style>
+</head>
+
+<body>
+
+<div id="avatarUsuario" class="avatar-esquina"></div>
+
+<audio id="audioInstructivo" src="instruc-atrapalacomida.mp3"></audio>
+
+<div id="instructivo">
+<div id="cajaInstructivo">
+<h2>🎮 ¿Cómo jugar?</h2>
+<p>
+Mueve el mouse para controlar el plato 🍽️<br><br>
+Atrapa solo la comida saludable 🥦🍎<br>
+Evita la comida chatarra 🍔🍟<br><br>
+¡Gana puntos y completa la barra! 🎯
+</p>
+<button onclick="cerrarInstructivo()">Jugar ▶️</button>
+</div>
+</div>
+
+<div class="cloud" style="top:50px;">☁️</div>
+<div class="cloud" style="top:130px; animation-delay:3s;">☁️</div>
+<div class="cloud" style="top:220px; animation-delay:6s;">☁️</div>
+
+<h1>🥦 Atrapa la Comida Saludable 🍎</h1>
+
+<div id="topBar">
+<div id="leftTop">
+<b id="nivelTexto">Nivel: -</b><br>
+</div>
+
+<div id="rightTop">
+<div id="score">Puntos: 0</div>
+<div id="timer">Tiempo: 40</div>
+<div id="progressContainer">
+<div id="progressBar"></div>
+</div>
+</div>
+</div>
+
+<div id="game">
+<div id="basket">🍽️</div>
+
+<div id="endScreen">
+<div id="resultText"></div>
+<br>
+<button onclick="restart()">Jugar otra vez</button>
+</div>
+</div>
+
+<button id="backBtn" onclick="volverZona()">Volver a la zona de juegos</button>
+
+<div id="message">Presiona jugar para comenzar</div>
+
+<script>
+
+const avatar = localStorage.getItem('avatarElegido');
+if(avatar){
+document.getElementById('avatarUsuario').innerText = avatar;
+}
+
+let audioInstructivo = document.getElementById("audioInstructivo");
+const audioStart = new Audio("instruc-atrapalacomida.mp3")
+
+window.onload = function(){
+audioInstructivo.play().catch(()=>{});
+}
+
+function cerrarInstructivo(){
+document.getElementById("instructivo").style.display="none";
+audioInstructivo.pause();
+audioInstructivo.currentTime = 0;
+audioStart.currentTime = 0;
+audioStart.play().catch(()=>{});
+
+nivelActual = 0
+aplicarNivel(niveles[nivelActual])
+}
+
+function volverZona(){
+window.location.href="entradajuegos.html";
+}
+
+const game=document.getElementById("game")
+const basket=document.getElementById("basket")
+const scoreText=document.getElementById("score")
+const nivelTexto = document.getElementById("nivelTexto")
+const message=document.getElementById("message")
+const timerText=document.getElementById("timer")
+const endScreen=document.getElementById("endScreen")
+const resultText=document.getElementById("resultText")
+const progressBar=document.getElementById("progressBar")
+
+let score=0
+let playing=false
+let time=40
+
+let levelSpeed=700
+let winScore=100
+let healthyChance=0.65
+
+let foodInterval
+
+let niveles = ["facil","medio","dificil"]
+let nivelActual = 0
+
+const healthy=["🍎","🍌","🍓","🍉","🥕","🥦","🌽","🍍","🥑","🍇"]
+const junk=["🍔","🍟","🍩","🍫","🍬","🥤","🍕"]
+
+const clickSound = new Audio("click.mp3")
+clickSound.volume = 0.5
+
+function playSound(){
+clickSound.currentTime = 0
+clickSound.play()
+}
+
+document.querySelectorAll("button").forEach(btn=>{
+btn.addEventListener("click", playSound);
+});
+
+function aplicarNivel(level){
+
+clearInterval(foodInterval)
+
+if(level=="facil"){
+levelSpeed=1000
+winScore=80
+healthyChance=0.75
+message.innerHTML="🟢 Nivel Fácil"
+nivelTexto.innerHTML="Nivel: Fácil"
+}
+
+if(level=="medio"){
+levelSpeed=600
+winScore=100
+healthyChance=0.60
+message.innerHTML="🟡 Nivel Medio"
+nivelTexto.innerHTML="Nivel: Medio"
+}
+
+if(level=="dificil"){
+levelSpeed=350
+winScore=120
+healthyChance=0.50
+message.innerHTML="🔴 Nivel Difícil"
+nivelTexto.innerHTML="Nivel: Difícil"
+}
+
+score=0
+time=40
+playing=true
+
+scoreText.innerHTML="Puntos: 0"
+timerText.innerHTML="Tiempo: 40"
+progressBar.style.width="0%"
+
+startFood()
+}
+
+document.addEventListener("mousemove", e=>{
+const rect = game.getBoundingClientRect()
+let x = e.clientX - rect.left - 40
+
+if(x < 0) x = 0
+if(x > game.clientWidth - 80) x = game.clientWidth - 80
+
+basket.style.left = x + "px"
+})
+
+function startFood(){
+foodInterval = setInterval(createFood, levelSpeed)
+startTimer()
+}
+
+function startTimer(){
+let countdown = setInterval(()=>{
+if(!playing){
+clearInterval(countdown)
+return
+}
+
+time--
+timerText.innerHTML="Tiempo: " + time
+
+if(time <= 0){
+endGame()
+clearInterval(countdown)
+}
+},1000)
+}
+
+function createFood(){
+if(!playing) return
+
+const food = document.createElement("div")
+food.classList.add("food")
+
+let isHealthy = Math.random() < healthyChance
+
+food.innerHTML = isHealthy 
+? healthy[Math.floor(Math.random()*healthy.length)]
+: junk[Math.floor(Math.random()*junk.length)]
+
+food.dataset.type = isHealthy ? "good" : "bad"
+
+food.style.left = Math.random() * (game.clientWidth - 40) + "px"
+food.style.top = "-50px"
+
+game.appendChild(food)
+
+fall(food)
+}
+
+function fall(food){
+let y = -50
+
+let drop = setInterval(()=>{
+
+if(!playing){
+clearInterval(drop)
+food.remove()
+return
+}
+
+y += 5
+food.style.top = y + "px"
+
+let basketRect = basket.getBoundingClientRect()
+let foodRect = food.getBoundingClientRect()
+
+if(
+foodRect.bottom > basketRect.top &&
+foodRect.left < basketRect.right &&
+foodRect.right > basketRect.left
+){
+
+if(food.dataset.type=="good"){
+score += 5
+message.innerHTML="✅ ¡Bien!"
+}else{
+score -= 5
+if(score < 0) score = 0
+message.innerHTML="❌ ¡Comida chatarra!"
+}
+
+scoreText.innerHTML="Puntos: " + score
+
+if(score >= winScore){
+endGame(true)
+}
+
+let progress = (score / winScore) * 100
+if(progress < 0) progress = 0
+if(progress > 100) progress = 100
+progressBar.style.width = progress + "%"
+
+food.remove()
+clearInterval(drop)
+}
+
+if(y > game.clientHeight){
+food.remove()
+clearInterval(drop)
+}
+
+},30)
+}
+
+function endGame(gano=false){
+playing = false
+clearInterval(foodInterval)
+
+endScreen.style.display="flex"
+
+if(gano){
+
+    fetch("actualizar_score.php", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  body:
+    "nombre=" + encodeURIComponent(localStorage.getItem("nombreAlumno")) +
+    "&score=" + encodeURIComponent(score) +
+    "&avance=" + encodeURIComponent(nivelTexto.innerText)
+});
+
+if(nivelActual < niveles.length - 1){
+resultText.innerHTML="🎉 ¡Nivel completado! Pasando al siguiente..."
+
+setTimeout(()=>{
+endScreen.style.display="none"
+nivelActual++
+aplicarNivel(niveles[nivelActual])
+},2000)
+
+}else{
+resultText.innerHTML="🏆 ¡Ganaste todo el juego!"
+launchConfetti()
+}
+
+}else{
+resultText.innerHTML="😢 Intenta otra vez"
+}
+}
+
+function restart(){
+location.reload()
+}
+
+function launchConfetti(){
+for(let i=0;i<50;i++){
+let conf = document.createElement("div")
+conf.classList.add("confetti")
+
+conf.style.left = Math.random()*100 + "vw"
+conf.style.background = `hsl(${Math.random()*360},100%,50%)`
+conf.style.animationDuration = (Math.random()*3+2) + "s"
+
+document.body.appendChild(conf)
+
+setTimeout(()=>conf.remove(),5000)
+}
+}
+
+</script>
+
+</body>
+</html>
