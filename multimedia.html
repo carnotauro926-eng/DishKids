@@ -198,10 +198,9 @@ function inicio(){
 </script>
 <script>
 /* MOSTRAR AVATAR */
-const avatar = localStorage.getItem('avatarElegido');
-if(avatar){
-document.getElementById("avatarUsuario").innerText = avatar;
-}
+const avatarGuardado = localStorage.getItem("avatarSeleccionado");
+    const avatar = document.getElementById("avatar");
+    avatar.innerHTML = avatarGuardado || "🙂";
 </script>
 </body>
 </html>
