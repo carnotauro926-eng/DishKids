@@ -230,7 +230,7 @@ const { data: alumno } = await supabaseClient
 
 if (alumno) {
 
-await supabaseClient.from('progreso').upsert({
+const { error } = await supabaseClient.from('progreso').upsert({
 
 id_alumno: alumno.id,
 archivo: "Crea tu Plato",
@@ -238,7 +238,9 @@ porcentaje: porcentajeObtenido,
 completado: esCompletado,
 fecha: new Date().toISOString()
 
-}, { onConflict: 'id_alumno, archivo' });
+}, { onConflict: 'id_alumno,archivo' });
+if (error) console.error("Error guardando progreso:", error.message);
+else console.log("✅ Progreso Crea tu Plato guardado");
 
 }
 }
