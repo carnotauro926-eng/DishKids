@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Encuentra el Intruso</title>
+<title>DishKids</title>
 
 <style>
 body{
@@ -222,13 +222,15 @@ async function registrarAvance(puntos) {
         .single();
 
     if (alumno) {
-        await supabaseClient.from('progreso').upsert({
+        const { error } = await supabaseClient.from('progreso').upsert({
             id_alumno: alumno.id,
             archivo: "Juego Encuentra al Intruso",
             porcentaje: puntos,
             completado: true,
             fecha: new Date().toISOString()
-        }, { onConflict: 'id_alumno, archivo' });
+        }, { onConflict: 'id_alumno,archivo' });
+        if (error) console.error("Error guardando progreso:", error.message);
+        else console.log("✅ Progreso guardado correctamente");
     }
 }
 
