@@ -102,15 +102,21 @@
   const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
   const nombreArchivo = {
+    // Secciones de contenido (guardan el nombre del archivo)
     "eo.html": "Plato del Bien Comer",
     "verdurasyfrutas.html": "Verduras y Frutas",
     "cereales.html": "Cereales",
     "leguminosas.html": "Leguminosas",
     "origenanimal.html": "Origen Animal",
-    "historia.html": "Historia",
-    "entradajuegos.html": "Zona de Juegos",
-    "multimedia.html": "Área de Canciones",
-    "musica.html": "Música"
+    "multimedia.html": "¡Misión Completada!",
+    // Secciones especiales
+    "Crea tu Plato": "Crea tu Plato",
+    "Zona de Juegos": "Zona de Juegos",
+    // Juegos (guardan nombre descriptivo)
+    "Juego Atrapa Comida": "Juego Atrapa Comida",
+    "Juego Clasifica Alimentos": "Juego Clasifica Alimentos",
+    "Juego Encuentra al Intruso": "Juego Encuentra al Intruso",
+    "Juego Memorama": "Juego Memorama"
   };
 
   /* TABS */
@@ -209,5 +215,6 @@
     res.innerHTML = `<strong>👤 ${alu.nombre_alumno}</strong><br>Secciones: ${prog.length}`;
   }
 </script>
+  
 </body>
 </html>
