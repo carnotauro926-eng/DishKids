@@ -199,13 +199,15 @@ async function registrarProgresoMemorama(puntos) {
         .single();
 
     if (alumno) {
-        await supabaseClient.from('progreso').upsert({
+        const { error } = await supabaseClient.from('progreso').upsert({
             id_alumno: alumno.id,
             archivo: "Juego Memorama",
-            porcentaje: puntos, // Guardamos los puntos acumulados
+            porcentaje: puntos,
             completado: true,
             fecha: new Date().toISOString()
-        }, { onConflict: 'id_alumno, archivo' });
+        }, { onConflict: 'id_alumno,archivo' });
+        if (error) console.error("Error guardando progreso:", error.message);
+        else console.log("✅ Progreso guardado correctamente");
     }
 }
 
