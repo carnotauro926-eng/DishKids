@@ -411,14 +411,15 @@ async function registrarAvance() {
         .single();
 
     if (alumno) {
-        // 2. Registramos que está en la sección de Cereales
-        await supabaseClient.from('progreso').upsert({
+        const { error } = await supabaseClient.from('progreso').upsert({
             id_alumno: alumno.id,
             archivo: "cereales.html",
-            porcentaje: 60, // Progreso del 60%
-            completado: false,
+            porcentaje: 60,
+            completado: true,
             fecha: new Date().toISOString()
-        }, { onConflict: 'id_alumno, archivo' });
+        }, { onConflict: 'id_alumno,archivo' });
+        if (error) console.error("Error guardando progreso:", error.message);
+        else console.log("✅ Progreso cereales guardado");
     }
 }
 
