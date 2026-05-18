@@ -233,14 +233,15 @@ async function registrarAvance() {
         .single();
 
     if (alumno) {
-        // 2. Registramos el progreso del 95%
-        await supabaseClient.from('progreso').upsert({
+        const { error } = await supabaseClient.from('progreso').upsert({
             id_alumno: alumno.id,
             archivo: "origenanimal.html",
             porcentaje: 95,
-            completado: false,
+            completado: true,
             fecha: new Date().toISOString()
-        }, { onConflict: 'id_alumno, archivo' });
+        }, { onConflict: 'id_alumno,archivo' });
+        if (error) console.error("Error guardando progreso:", error.message);
+        else console.log("✅ Progreso origen animal guardado");
     }
 }
 
@@ -294,5 +295,6 @@ function crearEmojis() {
 }
 </script>
 
+    
 </body>
 </html>
