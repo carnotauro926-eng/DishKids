@@ -7,9 +7,9 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap');
 
-body{
-
-    /* AVATAR */
+/* =========================
+   AVATAR
+========================= */
 .avatar-esquina{
 position:fixed;
 top:15px;
@@ -33,298 +33,193 @@ opacity:1;
 transform:scale(1) rotate(0deg);
 }
 }
-    
-    margin:0;
-    font-family:'Baloo 2', cursive;
-    text-align:center;
-    background: linear-gradient(135deg,#ff6ec4,#7873f5,#4ade80);
-    background-size: 300% 300%;
-    animation: bgMove 10s ease infinite;
-    color:white;
-    overflow-x:hidden;
+
+/* =========================
+   BODY
+========================= */
+body{
+margin:0;
+font-family:'Baloo 2', cursive;
+text-align:center;
+background: linear-gradient(135deg,#ff6ec4,#7873f5,#4ade80);
+background-size: 300% 300%;
+animation: bgMove 10s ease infinite;
+color:white;
+overflow-x:hidden;
 }
 
 @keyframes bgMove{
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
 
-/* 🎬 ANIMACIONES DE ENTRADA */
+/* ANIMACIONES */
 @keyframes dropTitle{
-    from{opacity:0; transform:translateY(-60px);}
-    to{opacity:1; transform:translateY(0);}
+from{opacity:0; transform:translateY(-60px);}
+to{opacity:1; transform:translateY(0);}
 }
 
 @keyframes zoomIn{
-    from{opacity:0; transform:scale(0.5);}
-    to{opacity:1; transform:scale(1);}
+from{opacity:0; transform:scale(0.5);}
+to{opacity:1; transform:scale(1);}
 }
 
 @keyframes fadeUp{
-    from{opacity:0; transform:translateY(40px);}
-    to{opacity:1; transform:translateY(0);}
+from{opacity:0; transform:translateY(40px);}
+to{opacity:1; transform:translateY(0);}
 }
 
-/* título */
+/* TÍTULO */
 h1{
-    margin-top:20px;
-    font-size:40px;
-    animation: dropTitle 1s ease forwards;
+margin-top:20px;
+font-size:40px;
+animation: dropTitle 1s ease forwards;
 }
 
-/* círculo */
+/* CÍRCULO */
 #circle{
-    width:320px;
-    height:320px;
-    border-radius:50%;
-    margin:20px auto;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:18px;
+width:320px;
+height:320px;
+border-radius:50%;
+margin:20px auto;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:18px;
 
-    background: rgba(255,255,255,0.15);
-    border: 3px dashed rgba(255,255,255,0.6);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+background: rgba(255,255,255,0.15);
+border: 3px dashed rgba(255,255,255,0.6);
+backdrop-filter: blur(10px);
+box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 
-    animation: zoomIn 1s ease forwards;
-    transition: transform 0.3s;
+animation: zoomIn 1s ease forwards;
+transition: transform 0.3s;
 }
 
 #circle:hover{
-    transform: scale(1.05);
+transform: scale(1.05);
 }
 
-/* contenedor */
+/* CONTENEDOR */
 #foodWrapper{
-    margin-top:20px;
+margin-top:20px;
 }
 
-/* filas */
+/* FILAS */
 .foodRow{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:12px;
-    margin:10px 0;
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:12px;
+margin:10px 0;
 }
 
-/* emojis */
+/* EMOJIS */
 .food{
-    font-size:32px;
-    cursor:grab;
-    padding:12px;
-    background: rgba(255,255,255,0.25);
-    border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.2);
-    transition: transform 0.2s, background 0.3s;
+font-size:32px;
+cursor:grab;
+padding:12px;
+background: rgba(255,255,255,0.25);
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+transition: transform 0.2s, background 0.3s;
 
-    opacity:0;
-    animation: fadeUp 0.6s ease forwards;
+opacity:0;
+animation: fadeUp 0.6s ease forwards;
 }
 
 .food:nth-child(odd){
-    animation-delay:0.2s;
+animation-delay:0.2s;
 }
+
 .food:nth-child(even){
-    animation-delay:0.4s;
+animation-delay:0.4s;
 }
 
 .food:hover{
-    transform: scale(1.2) rotate(5deg);
-    background: rgba(255,255,255,0.5);
+transform: scale(1.2) rotate(5deg);
+background: rgba(255,255,255,0.5);
 }
 
-/* botones */
+/* BOTONES */
 button, a.button{
-    padding:12px 18px;
-    margin:10px;
-    border:none;
-    border-radius:25px;
-    cursor:pointer;
-    text-decoration:none;
-    color:white;
+padding:12px 18px;
+margin:10px;
+border:none;
+border-radius:25px;
+cursor:pointer;
+text-decoration:none;
+color:white;
 
-    background: linear-gradient(45deg,#ff4d6d,#ffb703);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+background: linear-gradient(45deg,#ff4d6d,#ffb703);
+box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 
-    transition: all 0.3s ease;
+transition: all 0.3s ease;
 
-    opacity:0;
-    animation: fadeUp 1s ease forwards;
+opacity:0;
+animation: fadeUp 1s ease forwards;
 }
 
 button:hover, a.button:hover{
-    transform: scale(1.1);
-    box-shadow: 0 0 20px white;
+transform: scale(1.1);
+box-shadow: 0 0 20px white;
 }
 
-/* resultado */
+/* RESULTADO */
 #result{
-    font-size:22px;
-    margin-top:15px;
-    font-weight:bold;
-    animation: fadeUp 1s ease;
+font-size:22px;
+margin-top:15px;
+font-weight:bold;
+animation: fadeUp 1s ease;
 }
 </style>
 </head>
 
 <body>
 
-    <!-- AVATAR -->
+<!-- AVATAR -->
 <div id="avatarUsuario" class="avatar-esquina"></div>
 
 <h1>Crea tu Plato Saludable</h1>
 
 <audio id="welcomeAudio" autoplay>
-    <source src="bienvenida.mp3" type="audio/mpeg">
+<source src="bienvenida.mp3" type="audio/mpeg">
 </audio>
 
-<div id="circle" ondrop="drop(event)" ondragover="allowDrop(event)">
-    Arrastra aquí tu comida
+<div id="circle">
+Arrastra aquí tu comida
 </div>
 
 <div id="foodWrapper">
-    <div id="row1" class="foodRow"></div>
-    <div id="row2" class="foodRow"></div>
+<div id="row1" class="foodRow"></div>
+<div id="row2" class="foodRow"></div>
 </div>
 
-<button onclick="checkPlate()">OK</button>
-<button onclick="resetGame()">Crear otro plato</button>
-<a class="button" href="entradajuegos.html">Ir al área de juegos</a>
+<button>OK</button>
+<button>Crear otro plato</button>
+<a class="button" href="entradajuegos.html">
+Ir al área de juegos
+</a>
 
 <div id="result"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 /* =========================
-   CONFIGURACIÓN SUPABASE
+   MOSTRAR AVATAR
 ========================= */
-const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
-const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
-const supabaseClient = supabase.createClient(_supabaseUrl, _supabaseKey);
 
-async function registrarAvanceJuego(porcentajeObtenido, esCompletado) {
-    const nombre = localStorage.getItem("nombreAlumno");
-    if (!nombre) return;
-
-    const { data: alumno } = await supabaseClient
-        .from('alumnos')
-        .select('id')
-        .eq('nombre_alumno', nombre)
-        .single();
-
-    if (alumno) {
-        await supabaseClient.from('progreso').upsert({
-            id_alumno: alumno.id,
-            archivo: "Crea tu Plato", // Nombre descriptivo para el maestro
-            porcentaje: porcentajeObtenido, 
-            completado: esCompletado,
-            fecha: new Date().toISOString()
-        }, { onConflict: 'id_alumno, archivo' });
-    }
-}
-
-/* =========================
-   LÓGICA DEL JUEGO (CORREGIDA)
-========================= */
-const healthyFoods = ["🥦","🥕","🍎","🍌","🍇","🍉","🥗","🌽","🍓","🥑"];
-const unhealthyFoods = ["🍔","🍟","🍕","🌭","🍩","🍪","🍫","🥤","🍦","🍿"];
-
-let selected = [];
-
-function shuffle(array){
-    return array.sort(() => Math.random() - 0.5);
-}
-
-function loadFoods(){
-    selected = [];
-    let foods = shuffle([...healthyFoods, ...unhealthyFoods]);
-    let row1 = document.getElementById("row1");
-    let row2 = document.getElementById("row2");
-    row1.innerHTML = "";
-    row2.innerHTML = "";
-    foods.slice(0,10).forEach(createFood(row1));
-    foods.slice(10,20).forEach(createFood(row2));
-}
-
-function createFood(container){
-    return function(food){
-        let span = document.createElement("span");
-        span.classList.add("food");
-        span.draggable = true;
-        span.innerHTML = food;
-        span.id = "food" + Math.random();
-        span.ondragstart = (e) => {
-            e.dataTransfer.setData("text", span.id);
-        };
-        container.appendChild(span);
-    }
-}
-
-function allowDrop(ev){
-    ev.preventDefault();
-}
-
-function drop(ev){
-    ev.preventDefault();
-    let data = ev.dataTransfer.getData("text");
-    let element = document.getElementById(data);
-    
-    // Evitar que el texto guía se quede ahí
-    const circle = document.getElementById("circle");
-    if(circle.innerText === "Arrastra aquí tu comida") circle.innerText = "";
-
-    circle.appendChild(element);
-    selected.push(element.innerHTML);
-}
-
-function checkPlate(){
-    let healthyCount = selected.filter(f => healthyFoods.includes(f)).length;
-    let total = selected.length;
-    let score = total === 0 ? 0 : Math.round((healthyCount / total) * 100);
-
-    let msg = "";
-    let completado = false;
-
-    if(total === 0){
-        msg = "😅 No agregaste alimentos";
-    } else if(score >= 70){
-        msg = "🌟 ¡Muy saludable! " + score + "%";
-        completado = true; // Se marca como completado si es saludable
-    } else if(score >= 40){
-        msg = "🙂 Regular " + score + "%";
-    } else {
-        msg = "🍔 Poco saludable " + score + "%";
-    }
-
-    document.getElementById("result").innerText = msg;
-    
-    // REGISTRO EN SUPABASE
-    // Enviamos el progreso al maestro cuando el niño le da a "OK"
-    registrarAvanceJuego(score, completado);
-}
-
-function resetGame(){
-    document.getElementById("circle").innerHTML = "Arrastra aquí tu comida";
-    document.getElementById("result").innerText = "";
-    loadFoods();
-}
-
-/* MOSTRAR AVATAR */
 const avatar =
-localStorage.getItem('avatarElegido') ||
-localStorage.getItem('avatarSeleccionado');
+localStorage.getItem("avatarElegido") ||
+localStorage.getItem("avatarSeleccionado");
 
 if(avatar){
-document.getElementById("avatarUsuario").innerText = avatar;
-}    
-    
-window.onload = loadFoods;
+document.getElementById("avatarUsuario").innerHTML = avatar;
+}else{
+document.getElementById("avatarUsuario").innerHTML = "🙂";
+}
 </script>
 
+    
 </body>
 </html>
