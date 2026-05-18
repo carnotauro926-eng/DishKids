@@ -197,9 +197,13 @@ function inicio(){
 }
 
 /* MOSTRAR AVATAR */
-    const avatarGuardado = localStorage.getItem("avatarSeleccionado");
-    const avatar = document.getElementById("avatar");
-    avatar.innerHTML = avatarGuardado || "🙂";
+const avatarGuardado =
+localStorage.getItem("avatarElegido") ||
+localStorage.getItem("avatarSeleccionado");
+
+if(avatarGuardado){
+document.getElementById("avatarUsuario").innerHTML = avatarGuardado;
+}
 
 </script>
 </body>
