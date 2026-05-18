@@ -191,6 +191,7 @@ transform:scale(1) rotate(0deg);
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 function inicio(){
     window.location.href = "loginalumno.html";
@@ -204,6 +205,36 @@ localStorage.getItem("avatarSeleccionado");
 if(avatarGuardado){
 document.getElementById("avatarUsuario").innerHTML = avatarGuardado;
 }
+
+/* GUARDAR PROGRESO EN SUPABASE */
+const _supabaseUrl = "https://jxdlneupjqlyxanydzdl.supabase.co";
+const _supabaseKey = "sb_publishable_k-OLA_cUfQ_rFAXRrWz7LQ_yKPGQkrV";
+const supabaseClient = supabase.createClient(_supabaseUrl, _supabaseKey);
+
+async function registrarAvance() {
+    const nombre = localStorage.getItem("nombreAlumno");
+    if (!nombre) return;
+
+    const { data: alumno } = await supabaseClient
+        .from('alumnos')
+        .select('id')
+        .eq('nombre_alumno', nombre)
+        .single();
+
+    if (alumno) {
+        const { error } = await supabaseClient.from('progreso').upsert({
+            id_alumno: alumno.id,
+            archivo: "multimedia.html",
+            porcentaje: 100,
+            completado: true,
+            fecha: new Date().toISOString()
+        }, { onConflict: 'id_alumno,archivo' });
+        if (error) console.error("Error guardando progreso:", error.message);
+        else console.log("✅ Progreso multimedia guardado");
+    }
+}
+
+registrarAvance();
 
 </script>
 </body>
