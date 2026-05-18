@@ -498,14 +498,13 @@ async function registrarAvance() {
             .upsert({
                 id_alumno: alumno.id,
                 archivo: "eo.html",
-                porcentaje: 10, // Porcentaje inicial por entrar a esta sección
-                completado: false,
+                porcentaje: 10,
+                completado: true,
                 fecha: new Date().toISOString()
-            }, { onConflict: 'id_alumno, archivo' }); 
-            // Nota: Para que el 'onConflict' funcione, 
-            // debes tener una restricción única en Supabase para id_alumno y archivo.
+            }, { onConflict: 'id_alumno,archivo' });
 
         if (errorProg) console.error("Error al registrar progreso:", errorProg);
+        else console.log("✅ Progreso eo.html guardado");
 
     } catch (err) {
         console.error("Error inesperado:", err);
@@ -526,48 +525,7 @@ if(avatarGuardado) {
     avatarDiv.innerHTML = "🙂";
 }
 
-/* =========================
-   GUARDAR USUARIO
-========================= */
-
-async function guardarUsuario(){
-
-const nombre =
-localStorage.getItem(
-"nombreAlumno"
-);
-
-const avatarSeleccionado =
-localStorage.getItem(
-"avatarSeleccionado"
-);
-
-if(!nombre ||
-!avatarSeleccionado){
-
-return;
-
-}
-
-const { error } =
-await supabase
-.from("usuarios")
-.insert([
-{
-nombre:nombre,
-avatar:avatarSeleccionado
-}
-]);
-
-if(error){
-
-console.log(error);
-
-}
-
-}
-
-guardarUsuario();
+// (función guardarUsuario eliminada: tabla usuarios no existe en el proyecto)
 
 </script>
 
