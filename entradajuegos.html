@@ -153,13 +153,15 @@ async function registrarAvance() {
         .single();
 
     if (alumno) {
-        await supabaseClient.from('progreso').upsert({
+        const { error } = await supabaseClient.from('progreso').upsert({
             id_alumno: alumno.id,
             archivo: "Zona de Juegos",
             porcentaje: 100,
             completado: true,
             fecha: new Date().toISOString()
-        }, { onConflict: 'id_alumno, archivo' });
+        }, { onConflict: 'id_alumno,archivo' });
+        if (error) console.error("Error guardando progreso:", error.message);
+        else console.log("✅ Progreso zona de juegos guardado");
     }
 }
 
