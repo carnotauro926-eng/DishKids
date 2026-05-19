@@ -290,8 +290,19 @@ function cerrarInstructivo() {
 }
 
 function obtenerElementos(arr, cant) {
+    let resultado = [];
+
+    // Mezclar el arreglo
     let mezclado = [...arr].sort(() => Math.random() - 0.5);
-    return mezclado.slice(0, cant);
+
+    // Si no alcanza, repetir elementos aleatorios
+    while (resultado.length < cant) {
+        resultado.push(
+            mezclado[Math.floor(Math.random() * mezclado.length)]
+        );
+    }
+
+    return resultado;
 }
 
 function siguienteRonda() {
